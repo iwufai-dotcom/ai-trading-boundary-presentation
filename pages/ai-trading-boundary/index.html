@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI 与人在交易中的效率与边界｜Clean HTML+SVG v1.0</title>
+  <style>
+    :root {
+      --bg-page:#D9D9D4; --paper:#F5F5F3; --paper-soft:#FAFAF8; --paper-panel:#F1F1EE;
+      --ink:#2E3031; --text:#4F5354; --muted:#8E9192; --line:#D8D8D4; --line-strong:#C8C8C3;
+      --accent:#C84F3D; --blue-soft:#EEF3F5; --shadow:0 22px 70px rgba(10,12,14,.16);
+      --font-title:"Songti SC","STSong","Noto Serif SC","SimSun",serif;
+      --font-body:"PingFang SC","Microsoft YaHei","Noto Sans SC",Arial,sans-serif;
+      --font-mono:"SFMono-Regular","Menlo","Cascadia Code",monospace;
+      --safe-x:88px; --head-h:150px; --main-h:500px; --gap-main:28px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;background:var(--bg-page);color:var(--ink);font-family:var(--font-body);overflow:hidden}
+    body{display:flex;align-items:center;justify-content:center}
+    .deck{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;position:relative}
+    .slide{width:min(1600px,94vw);aspect-ratio:16/9;background:var(--paper);position:absolute;overflow:hidden;display:none;padding:70px var(--safe-x) 62px;box-shadow:var(--shadow)}
+    .slide.active{display:block}
+    .brand{position:absolute;left:var(--safe-x);right:var(--safe-x);top:36px;height:30px;display:flex;align-items:center;justify-content:space-between;z-index:20}
+    .brand-left{display:flex;align-items:center;gap:10px;color:var(--ink);font-size:12px;font-weight:600;letter-spacing:.02em}
+    .brand-right{font-family:var(--font-mono);font-size:11px;color:#9B9D9D;letter-spacing:.08em;text-transform:uppercase}
+    .logo-mark{width:18px;height:18px;border:2px solid var(--ink);border-radius:50%;position:relative;display:inline-block}
+    .logo-mark:after{content:"";position:absolute;width:6px;height:6px;border-radius:50%;right:-3px;top:-2px;background:var(--accent)}
+    .footer{position:absolute;left:var(--safe-x);right:var(--safe-x);bottom:26px;display:flex;align-items:center;justify-content:space-between;font-family:var(--font-mono);font-size:11px;color:#A3A4A0;letter-spacing:.06em;z-index:20}
+    .footer .bar{height:1px;background:var(--line);flex:1;margin:0 18px}.footer b{color:var(--accent);font-weight:600}
+    .content{position:relative;z-index:5;height:100%}.with-head{display:grid;grid-template-rows:var(--head-h) 1fr auto;padding-top:8px}
+    .slide-head{min-height:138px;display:grid;grid-template-columns:1fr 520px;column-gap:44px;align-items:end;border-bottom:1px solid rgba(216,216,212,.72);padding-bottom:20px}
+    .slide-head.single{grid-template-columns:1fr}.eyebrow{font-family:var(--font-mono);font-size:12px;color:var(--accent);letter-spacing:.14em;text-transform:uppercase;margin-bottom:14px}
+    .title{font-family:var(--font-title);font-weight:500;color:var(--ink);letter-spacing:-.025em;margin:0}.title-xl{font-size:72px;line-height:1.08}.title-l{font-size:50px;line-height:1.15}.title-m{font-size:40px;line-height:1.18}
+    .subtitle{font-size:20px;line-height:1.52;color:var(--text);margin:0;font-weight:500;align-self:end;margin-bottom:2px}.body{font-size:18px;line-height:1.68;color:var(--text);margin:0}
+    .main-zone{margin-top:var(--gap-main);height:var(--main-h);border:1px solid var(--line-strong);background:var(--paper-soft);position:relative;box-shadow:inset 0 0 0 1px rgba(255,255,255,.45);overflow:hidden}
+    .main-zone svg{width:100%;height:100%;display:block}.bottom-strip{margin-top:14px;min-height:54px;border-top:1px solid var(--line);padding-top:13px;font-family:var(--font-title);font-size:24px;line-height:1.42;color:var(--ink)}
+    .bottom-strip.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;font-family:var(--font-body);font-size:16px;color:var(--text)}.bottom-strip.grid2 b{display:block;font-family:var(--font-title);font-size:22px;font-weight:500;color:var(--ink);margin-bottom:4px}
+    .svg-line{stroke:var(--line-strong);stroke-width:1.2;fill:none}.svg-line-soft{stroke:var(--line);stroke-width:1;fill:none}.svg-accent{stroke:var(--accent);stroke-width:2;fill:none}.svg-node{fill:var(--paper-soft);stroke:var(--line-strong);stroke-width:1}.svg-node-soft{fill:var(--paper-panel);stroke:var(--line);stroke-width:1}.svg-node-accent{fill:var(--paper-soft);stroke:var(--accent);stroke-width:2}
+    .svg-label{font-family:var(--font-body);font-size:15.5px;fill:var(--text)}.svg-label-small{font-family:var(--font-mono);font-size:10.8px;fill:var(--muted);letter-spacing:.08em}.svg-label-title{font-family:var(--font-title);font-size:24px;fill:var(--ink)}.svg-label-accent{font-family:var(--font-body);font-size:15px;fill:var(--accent);font-weight:600}
+    .cover-grid{display:grid;grid-template-columns:55% 45%;align-items:center}.cover-title{font-family:var(--font-title);font-size:72px;line-height:1.08;font-weight:500;letter-spacing:-.025em;margin:0}.cover-subtitle{font-size:22px;line-height:1.55;color:var(--text);margin:0;font-weight:500}.accent-line{width:52px;height:3px;background:var(--accent);margin:24px 0 28px}.meta{margin-top:52px;display:flex;gap:28px;align-items:center;color:var(--text)}.meta span{border-left:3px solid var(--accent);padding-left:12px;font-size:16px;line-height:1.4}.cover-panel{width:82%;height:68%;border:1px solid var(--line);background:linear-gradient(135deg,rgba(250,250,248,.78),rgba(239,239,236,.42));margin-left:auto}
+    .split-zone{margin-top:var(--gap-main);height:var(--main-h);display:grid;grid-template-columns:1fr 1fr;gap:54px;position:relative}.split-zone:before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--accent);transform:translateX(-50%)}.side-box{border:1px solid var(--line);background:var(--paper-soft);padding:34px 36px 28px;position:relative;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.42)}.side-box h3{font-family:var(--font-title);font-size:33px;font-weight:500;margin:0 0 22px;color:var(--ink)}.side-box ul{margin:0;padding:0;list-style:none}.side-box li{border-bottom:1px solid var(--line);padding:12px 0;font-size:19px;color:var(--text)}.side-goal{position:absolute;left:36px;right:36px;bottom:26px;border-top:1px solid var(--line-strong);padding-top:18px;font-size:20px;color:var(--accent);font-weight:600}.side-svg{position:absolute;right:20px;top:24px;width:190px;height:190px;opacity:.18;pointer-events:none}
+    .lr-grid{margin-top:var(--gap-main);height:var(--main-h);display:grid;grid-template-columns:30% 70%;gap:28px}.text-card{border-left:3px solid var(--accent);padding:24px 28px;background:var(--paper-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;flex-direction:column;justify-content:center}.panel{border:1px solid var(--line);background:var(--paper-soft);box-shadow:inset 0 0 0 1px rgba(255,255,255,.42);position:relative;overflow:hidden}
+    .warning-grid{margin-top:var(--gap-main);height:var(--main-h);display:grid;grid-template-columns:42% 58%;gap:44px}.warning-copy{border-left:5px solid var(--accent);padding-left:30px;display:flex;flex-direction:column;justify-content:center}.warning-panel{border:1px solid var(--line);background:var(--paper-soft);padding:38px 42px 36px 58px;position:relative;box-shadow:inset 0 0 0 1px rgba(255,255,255,.42)}.warning-panel:before{content:"";position:absolute;left:32px;top:44px;bottom:42px;width:2px;background:var(--accent)}.warning-line{display:grid;grid-template-columns:54px 1fr;min-height:78px;border-bottom:1px solid var(--line);align-items:center}.warning-num{font-family:var(--font-mono);color:var(--accent);font-size:13px}.warning-line p{margin:0;font-size:23px;line-height:1.38;color:var(--text)}.risk-note{position:absolute;left:58px;right:42px;bottom:28px;border-left:3px solid var(--accent);padding-left:18px;font-size:16.5px;line-height:1.55;color:var(--text)}
+    .progress{position:fixed;left:0;bottom:0;height:3px;background:var(--accent);z-index:100;transition:width .25s ease}.nav-help{position:fixed;right:24px;bottom:18px;font-family:var(--font-mono);font-size:11px;color:#777;opacity:.72;z-index:100}
+    
+    /* v0.9 fixes: slide 01 / 05 / 14 proportion corrections */
+    .slide-05.v09 .content {
+      display: grid;
+      grid-template-rows: 150px 1fr auto;
+      padding-top: 8px;
+    }
+    .slide-05.v09 .slide-head {
+      min-height: 138px;
+      display: grid;
+      grid-template-columns: 1fr 520px;
+      column-gap: 44px;
+      align-items: end;
+      border-bottom: 1px solid rgba(216,216,212,.62);
+      padding-bottom: 20px;
+    }
+    .slide-05.v09 .slide-head .subtitle {
+      font-size: 20px;
+      line-height: 1.52;
+      color: var(--text);
+      align-self: end;
+      margin-bottom: 2px;
+    }
+    .slide-05.v09 .bridge-zone {
+      margin-top: 28px;
+      height: 500px;
+      border: 1px solid var(--line-strong);
+      background: var(--paper-soft);
+      position: relative;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.45);
+    }
+    .slide-05.v09 .bridge-zone svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .slide-05.v09 .bottom-strip {
+      margin-top: 14px;
+      min-height: 54px;
+      border-top: 1px solid var(--line);
+      padding-top: 13px;
+      font-family: var(--font-title);
+      font-size: 24px;
+      line-height: 1.42;
+      color: var(--ink);
+    }
+    .slide-14.v09 .experience-grid {
+      margin-top: 28px;
+      height: 500px;
+      display: grid;
+      grid-template-columns: 42% 58%;
+      gap: 30px;
+    }
+    .slide-14.v09 .boundary-panel {
+      border: 1px solid var(--line);
+      background: var(--paper-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.42);
+    }
+    .slide-14.v09 .boundary-panel svg {
+      width: 80%;
+      height: 80%;
+      display: block;
+    }
+    .slide-14.v09 .experience-list {
+      display: grid;
+      grid-template-rows: 1fr 1fr 1.18fr;
+      gap: 12px;
+    }
+    .slide-14.v09 .experience-box {
+      border: 1px solid var(--line);
+      background: var(--paper-soft);
+      padding: 18px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.42);
+    }
+    .slide-14.v09 .experience-box.core {
+      border-left: 3px solid var(--accent);
+    }
+    .slide-14.v09 .experience-box h3 {
+      font-family: var(--font-title);
+      font-size: 27px;
+      font-weight: 500;
+      margin: 0 0 8px;
+      color: var(--ink);
+    }
+    .slide-14.v09 .experience-box.core h3 {
+      color: var(--accent);
+    }
+    .slide-14.v09 .experience-box p {
+      margin: 0;
+      font-size: 16.5px;
+      line-height: 1.55;
+      color: var(--text);
+    }
+
+    @media print{html,body{overflow:visible;background:white}.deck{display:block;height:auto}.slide{display:block!important;position:relative;width:1600px;height:900px;box-shadow:none;page-break-after:always}.progress,.nav-help{display:none}}
+  </style>
+</head>
+<body>
+  <div class="deck" id="deck"></div>
+  <div class="progress" id="progress"></div>
+  <div class="nav-help">← / → 翻页 · F 全屏 · P 打印</div>
+
+  <script>
+    const NS = "http://www.w3.org/2000/svg";
+    const slides = [
+      {n:1, part:"Part 1 / 定题与分界", eyebrow:"5.13 金工论坛", title:"AI 与人在交易中的<br>效率与边界", sub:"PandaAI 创始人李昱琦<br>关于 AI 量化工具、交易实践与系统边界的阶段思考", type:"cover", footer:"AI TRADING FUTURE"},
+      {n:2, part:"Part 1 / 定题与分界", eyebrow:"Core Question", title:"AI 在交易链路中的位置", sub:"真正的问题，不是 AI 能不能交易，而是 AI 在交易链路中应该站在哪里。", type:"position", bottom:"投研可以反复试错，交易必须面对真实成本、仓位变化与系统约束。", footer:"POSITION IN TRADING CHAIN"},
+      {n:3, part:"Part 1 / 定题与分界", eyebrow:"Core Boundary", title:"投研放大效率，交易保留边界", sub:"投研侧强调效率，交易侧强调边界。", type:"split", bottom:"投研侧打开效率路径，交易侧建立控制边界。", footer:"EFFICIENCY / BOUNDARY"},
+      {n:4, part:"Part 1 / 定题与分界", eyebrow:"Research Chain", title:"从想法到验证的距离", sub:"AI 先改变的，是从想法到验证的距离。", type:"research", bottom:"AI 的第一层价值，不是跳过验证，而是压缩验证。", footer:"IDEA TO VALIDATION"},
+      {n:5, part:"Part 2 / 效率如何被系统化", eyebrow:"From Tool to System", title:"个人效率，会走向系统效率", sub:"当效率问题进入机构场景，它不再是个人工具问题，而是系统建设问题。", type:"toolSystem", bottom:"个人研究能力被吸纳进机构系统，变成可复用、可扩展、可治理的基础能力。", footer:"FROM TOOL TO SYSTEM"},
+      {n:6, part:"Part 2 / 效率如何被系统化", eyebrow:"Institutional Research System", title:"机构投研系统", sub:"机构投研的效率，不在于一个环节，而是可延续的链路系统。", type:"institution", bottom:"这不是单点工具能力，而是可延续的链路系统。", footer:"INSTITUTIONAL RESEARCH SYSTEM"},
+      {n:7, part:"Part 2 / 效率如何被系统化", eyebrow:"Capability Organization", title:"能力组织：Data / Skill / Agent", sub:"只会回答问题的 AI，还进不了交易流程。", type:"stack", bottom:"交易系统需要的不是一次性回答，而是可调用的数据、可复用的 Skill、可编排的 Agent。", footer:"DATA / SKILL / AGENT"},
+      {n:8, part:"Part 2 / 效率如何被系统化", eyebrow:"Knowledge Engineering", title:"知识工程与多智能体编排", sub:"复杂的投研任务，需要工程化的体系。", type:"orchestration", bottomGrid:["研报知识工程|研报、数据库、内部资料进入可检索、可调用、可训练流程。","多智能体投研编排|数据提取、知识检索、深度分析、结果生成形成端到端处理。"], footer:"MULTI-AGENT ORCHESTRATION"},
+      {n:9, part:"Part 3 / 边界如何被建立", eyebrow:"Turning Point", title:"效率越高，越需要边界", sub:"AI 可以降低研究与工程门槛，但不会降低市场赚钱的门槛。", type:"warning", bottom:"AI 可以让研究、生成和调用变快；边界决定这些结果能否进入交易系统。", footer:"BOUNDARY SYSTEM"},
+      {n:10, part:"Part 3 / 边界如何被建立", eyebrow:"Validation Boundary", title:"研究结果的验证边界", sub:"AI 可以加速试错，但不能替代验证。", type:"validation", bottom:"进入交易前，每一个 AI 生成结果都必须穿过验证门槛。", footer:"VALIDATION BOUNDARY"},
+      {n:11, part:"Part 3 / 边界如何被建立", eyebrow:"Adoption Boundary", title:"交易结果的控制边界", sub:"AI 的回答，不等于系统可以采用的结果。", type:"adoption", bottom:"可解释性不一定带来收益，但它决定结果能否被信任、复盘和授权。", footer:"CONTROL BOUNDARY"},
+      {n:12, part:"Part 3 / 边界如何被建立", eyebrow:"Production-grade Agent", title:"生产级金融 Agent", sub:"一个 Agent 的输出要进入交易系统，关键就从“回答质量”变成“可采用性”。", type:"agent", bottom:"MoTA / TQX：从“看上去能回答”，升级为“可编排、可验证、可审计、可归责”。", footer:"PRODUCTION-GRADE AGENT"},
+      {n:13, part:"Part 4 / 人为什么仍然在场", eyebrow:"Human Position", title:"AI 不能替人承担交易后果", sub:"AI 可以承担更多整理、分析、提醒和复盘工作；人仍然定义目标、风险承受、范式选择和最终责任。", type:"responsibility", bottom:"AI 放大效率，人定义目标与责任，系统承接边界。", footer:"RESPONSIBILITY ALLOCATION"},
+      {n:14, part:"Part 4 / 人为什么仍然在场", eyebrow:"Experience Structuring", title:"交易员的经验，能不能变成 AI 分身？", sub:"显性规则、复盘逻辑、交易记录和术语体系可以被沉淀；但盘感、风险承受、范式切换和最终判断不能被简单外包。", type:"experience", bottom:"经验可以被结构化，但最终责任和范式切换不能被简单外包。", footer:"EXPERIENCE BOUNDARY"},
+      {n:15, part:"Part 4 / 人为什么仍然在场", eyebrow:"Dual-source Validation", title:"双源验证", sub:"成熟交易者的历史行为和复盘逻辑，可以通过交割数据与复盘笔记交叉验证，沉淀为交易 Skill；但最终判断仍然由交易者保留。", type:"dual", bottom:"当讨论回到交易员本人，AI 的价值就不是替代判断，而是沉淀经验。", footer:"DUAL-SOURCE VALIDATION"},
+      {n:16, part:"Part 4 / 人为什么仍然在场", eyebrow:"Pattern Distillation Case", title:"交易模式蒸馏案例", sub:"把经验变成可提醒、可复盘、可迭代的系统。", type:"distill", bottom:"AI 汇聚信息，交易者保留最终判断。", footer:"TRADING PATTERN DISTILLATION"},
+      {n:17, part:"Part 5 / 系统收束", eyebrow:"Final System", title:"把效率放进边界，把 AI 放进系统", sub:"PandaAI 的目标，是把数据、知识、Skill、Agent、工作流、回测、仿真、实盘、审计和复盘组织成可运行、可追踪、可迭代的 AI 量化基础设施。", type:"final", bottom:"", footer:"PANDAAI INFRASTRUCTURE"}
+    ];
+
+    function defs(ids){
+      return `<defs><marker id="${ids}" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#C8C8C3" stroke-width="1.2"/></marker><marker id="${ids}a" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9" fill="none" stroke="#C84F3D" stroke-width="1.6"/></marker></defs>`;
+    }
+
+    function svg(content){ return `<svg viewBox="0 0 1408 500">${content}</svg>`; }
+
+    function diagram(type, n){
+      const id = "a" + n;
+      if(type === "position") return svg(defs(id)+`
+        <text x="70" y="58" class="svg-label-small">POSITION IN TRADING CHAIN</text>
+        <text x="90" y="170" class="svg-label-title" style="font-size:36px;">AI 在交易链路中，哪些环节可以放大效率，哪些必须保留边界？</text>
+        <line x1="220" y1="310" x2="1190" y2="310" class="svg-line" marker-end="url(#${id})"/>
+        <rect x="120" y="266" width="240" height="88" class="svg-node-soft"/><rect x="584" y="266" width="240" height="88" class="svg-node-soft"/><rect x="1048" y="266" width="240" height="88" class="svg-node-accent"/>
+        <text x="240" y="304" text-anchor="middle" class="svg-label-title">投研侧</text><text x="240" y="334" text-anchor="middle" class="svg-label-small">Research / 更快验证</text>
+        <text x="704" y="304" text-anchor="middle" class="svg-label-title">模型侧</text><text x="704" y="334" text-anchor="middle" class="svg-label-small">Model / 验证与采用</text>
+        <text x="1168" y="304" text-anchor="middle" class="svg-label-title">交易侧</text><text x="1168" y="334" text-anchor="middle" class="svg-label-small">Trading / 可控采用</text>`);
+      if(type === "research") return svg(defs(id)+`
+        <text x="70" y="52" class="svg-label-small">LONG RESEARCH DISTANCE → COMPRESSED VALIDATION LOOP</text>
+        ${["交易想法","数据调用","因子 / 策略","代码生成","回测验证","图表观察","复盘调整"].map((t,i)=>`<rect x="${80+i*168}" y="98" width="120" height="68" class="svg-node-soft"/><text x="${140+i*168}" y="132" text-anchor="middle" class="svg-label">${t}</text>`).join("")}
+        <path d="M230 248 C390 214,548 214,704 250 C860 286,1018 286,1180 250" fill="none" stroke="#D8D8D4" stroke-width="32" stroke-linecap="round" opacity=".48"/>
+        <path d="M230 248 C390 214,548 214,704 250 C860 286,1018 286,1180 250" class="svg-line" marker-end="url(#${id})"/>
+        <circle cx="704" cy="330" r="86" fill="#FAFAF8" stroke="#C84F3D" stroke-width="2"/>
+        <text x="704" y="320" text-anchor="middle" class="svg-label-title">验证</text><text x="704" y="352" text-anchor="middle" class="svg-label-accent">Validation Loop</text>
+        <rect x="438" y="282" width="140" height="64" class="svg-node"/><text x="508" y="318" text-anchor="middle" class="svg-label">数据调用</text>
+        <rect x="624" y="220" width="160" height="64" class="svg-node"/><text x="704" y="256" text-anchor="middle" class="svg-label">代码生成</text>
+        <rect x="830" y="282" width="140" height="64" class="svg-node"/><text x="900" y="318" text-anchor="middle" class="svg-label">图表观察</text>
+        <rect x="624" y="402" width="160" height="64" class="svg-node"/><text x="704" y="438" text-anchor="middle" class="svg-label">复盘调整</text>
+        <path d="M578 314 C606 270,632 254,624 252" class="svg-line" marker-end="url(#${id})"/><path d="M784 252 C832 254,858 274,830 314" class="svg-line" marker-end="url(#${id})"/><path d="M900 346 C860 402,808 428,784 434" class="svg-line" marker-end="url(#${id})"/><path d="M624 434 C560 414,514 374,508 346" class="svg-accent" marker-end="url(#${id}a)"/>
+        <text x="82" y="442" class="svg-label-small">不是跳过验证，而是把多轮试错压缩成更短、更高频、更可复盘的验证回路。</text>`);
+      if(type === "institution") return svg(`
+        <text x="72" y="58" class="svg-label-small">CASE / 国泰海通 AI 智能因子投研系统</text>
+        <rect x="556" y="184" width="296" height="132" class="svg-node-accent"/><text x="704" y="230" text-anchor="middle" class="svg-label-title">国泰海通</text><text x="704" y="262" text-anchor="middle" class="svg-label-title">AI 智能因子投研系统</text><text x="704" y="292" text-anchor="middle" class="svg-label-small">INSTITUTIONAL RESEARCH CORE</text>
+        <line x1="704" y1="184" x2="704" y2="124" class="svg-line"/><line x1="556" y1="250" x2="430" y2="250" class="svg-line"/><line x1="852" y1="250" x2="978" y2="250" class="svg-line"/><line x1="704" y1="316" x2="704" y2="394" class="svg-line"/>
+        <rect x="556" y="76" width="296" height="78" class="svg-node-soft"/><text x="704" y="110" text-anchor="middle" class="svg-label">AI 因子研究框架</text><text x="704" y="136" text-anchor="middle" class="svg-label-small">FACTOR RESEARCH FRAMEWORK</text>
+        <rect x="136" y="208" width="294" height="84" class="svg-node-soft"/><text x="283" y="244" text-anchor="middle" class="svg-label">多模型 / 多 Agent</text><text x="283" y="270" text-anchor="middle" class="svg-label">交易信号系统</text>
+        <rect x="978" y="208" width="294" height="84" class="svg-node-soft"/><text x="1125" y="244" text-anchor="middle" class="svg-label">数据处理、回测与风控体系</text><text x="1125" y="270" text-anchor="middle" class="svg-label-small">DATA / BACKTEST / RISK CONTROL</text>
+        <rect x="484" y="394" width="440" height="70" class="svg-node-soft"/><text x="704" y="424" text-anchor="middle" class="svg-label">超级图表、策略管理、工作流与智能体基础架构</text><text x="704" y="448" text-anchor="middle" class="svg-label-small">SUPER CHART / STRATEGY / WORKFLOW / AGENT INFRA</text>`);
+      if(type === "stack") return svg(`
+        <text x="70" y="52" class="svg-label-small">CAPABILITY STACK / FROM RESOURCE TO ORCHESTRATION</text>
+        <rect x="150" y="350" width="1108" height="82" fill="#EEF3F5" stroke="#D8D8D4"/><rect x="250" y="238" width="908" height="82" fill="#F1F1EE" stroke="#D8D8D4"/><rect x="410" y="126" width="588" height="82" fill="#FAFAF8" stroke="#C84F3D" stroke-width="2"/>
+        <text x="704" y="176" text-anchor="middle" class="svg-label-title">Agent</text><text x="704" y="198" text-anchor="middle" class="svg-label-small">任务拆解 / 工具调度 / 流程执行 / 结果汇总</text>
+        <text x="704" y="288" text-anchor="middle" class="svg-label-title">Skill</text><text x="704" y="310" text-anchor="middle" class="svg-label-small">因子计算 / 风控分析 / 研报检索 / 回测调用</text>
+        <text x="704" y="400" text-anchor="middle" class="svg-label-title">Data</text><text x="704" y="422" text-anchor="middle" class="svg-label-small">行情 / 研报 / 财报 / 宏观 / 交易记录</text>
+        <line x1="704" y1="350" x2="704" y2="322" class="svg-line"/><line x1="704" y1="238" x2="704" y2="210" class="svg-accent"/>
+        <text x="150" y="462" class="svg-label-small">FOUNDATION</text><text x="250" y="224" class="svg-label-small">REUSABLE CAPABILITIES</text><text x="410" y="112" class="svg-label-accent">ORCHESTRATION</text>`);
+      if(type === "orchestration") return svg(defs(id)+`
+        <text x="70" y="50" class="svg-label-small">TASK DECOMPOSITION / PARALLEL AGENTS / TRACEABLE OUTPUT</text>
+        <rect x="70" y="206" width="150" height="88" class="svg-node-soft"/><text x="145" y="242" text-anchor="middle" class="svg-label-title">用户问题</text><text x="145" y="270" text-anchor="middle" class="svg-label-small">User Query</text>
+        <rect x="345" y="82" width="230" height="86" class="svg-node-accent"/><text x="460" y="118" text-anchor="middle" class="svg-label-title">主管 Agent</text><text x="460" y="144" text-anchor="middle" class="svg-label-small">任务拆解 / 调度</text>
+        ${[[345,"数据 Agent","数据提取 / 指标计算"],[625,"检索 Agent","资料检索 / 知识调用"],[905,"分析 Agent","逻辑分析 / 结果审查"]].map(a=>`<rect x="${a[0]}" y="236" width="230" height="72" class="svg-node"/><text x="${a[0]+115}" y="266" text-anchor="middle" class="svg-label-title">${a[1]}</text><text x="${a[0]+115}" y="290" text-anchor="middle" class="svg-label-small">${a[2]}</text>`).join("")}
+        <rect x="625" y="376" width="230" height="72" class="svg-node"/><text x="740" y="406" text-anchor="middle" class="svg-label-title">结果合成</text><text x="740" y="430" text-anchor="middle" class="svg-label-small">Synthesis</text>
+        <rect x="1088" y="376" width="220" height="72" class="svg-node-accent"/><text x="1198" y="406" text-anchor="middle" class="svg-label-title">Trace / 日志</text><text x="1198" y="430" text-anchor="middle" class="svg-label-small">结构化输出</text>
+        <path d="M220 250 C270 206,300 160,345 125" class="svg-line" marker-end="url(#${id})"/><line x1="460" y1="168" x2="460" y2="236" class="svg-line" marker-end="url(#${id})"/><path d="M575 125 C680 152,730 190,740 236" class="svg-line" marker-end="url(#${id})"/><path d="M575 125 C820 134,1000 172,1020 236" class="svg-line" marker-end="url(#${id})"/>
+        <path d="M460 308 C500 356,590 392,625 412" class="svg-line" marker-end="url(#${id})"/><line x1="740" y1="308" x2="740" y2="376" class="svg-line" marker-end="url(#${id})"/><path d="M1020 308 C980 356,890 392,855 412" class="svg-line" marker-end="url(#${id})"/><line x1="855" y1="412" x2="1088" y2="412" class="svg-accent" marker-end="url(#${id}a)"/>`);
+      if(type === "validation") return svg(defs(id)+`
+        <text x="70" y="52" class="svg-label-small">VALIDATION TUNNEL / FIVE THRESHOLDS BEFORE TRADING</text>
+        <rect x="78" y="210" width="160" height="86" class="svg-node-soft"/><text x="158" y="244" text-anchor="middle" class="svg-label-title">AI 输出</text><text x="158" y="272" text-anchor="middle" class="svg-label-small">AI Output</text>
+        <path d="M320 118 L1080 178 L1080 322 L320 382 Z" fill="#F2F2EF" stroke="#D8D8D4"/><path d="M320 156 L1080 206 L1080 294 L320 344 Z" fill="none" stroke="#C8C8C3"/>
+        ${[360,500,640,780].map(x=>`<line x1="${x}" y1="${150+(x-360)*.08}" x2="${x}" y2="${350-(x-360)*.08}" class="svg-line"/>`).join("")}<line x1="920" y1="198" x2="920" y2="302" class="svg-accent"/>
+        ${["01 数据时点","02 未来函数","03 样本外稳定","04 交易成本","05 可复现"].map((t,i)=>`<text x="${[360,500,640,780,920][i]}" y="405" text-anchor="middle" class="${i===4?'svg-label-accent':'svg-label-small'}">${t}</text>`).join("")}
+        <path d="M238 253 C278 253,292 253,320 253" class="svg-line" marker-end="url(#${id})"/><path d="M1080 250 C1128 250,1146 250,1180 250" class="svg-accent" marker-end="url(#${id}a)"/>
+        <rect x="1180" y="200" width="170" height="100" class="svg-node-accent"/><text x="1265" y="240" text-anchor="middle" class="svg-label-title">交易前</text><text x="1265" y="270" text-anchor="middle" class="svg-label-title">研究结果</text>`);
+      if(type === "agent") return svg(defs(id)+`
+        <text x="70" y="52" class="svg-label-small">ANSWER QUALITY → CONTROL LAYERS → ADOPTABILITY</text>
+        <rect x="84" y="202" width="190" height="96" class="svg-node-soft"/><text x="179" y="240" text-anchor="middle" class="svg-label-title">Agent Output</text><text x="179" y="268" text-anchor="middle" class="svg-label">回答质量</text>
+        <path d="M340 112 L970 112 L910 388 L400 388 Z" fill="#F2F2EF" stroke="#D8D8D4"/>
+        ${[158,210,262,314].map(y=>`<line x1="${390-(y-158)*.2}" y1="${y}" x2="${950-(y-158)*.23}" y2="${y}" class="svg-line"/>`).join("")}<line x1="350" y1="366" x2="902" y2="366" class="svg-accent"/>
+        ${[["01","Input Contract","输入是否满足要求"],["02","Output Contract","输出能否被下游消费"],["03","Trigger Rule","是否允许进入正式结果"],["04","Failure Card","失败如何归因"],["05","Control Hook","谁拥有最终控制权"]].map((r,i)=>`<text x="${432-i*6}" y="${144+i*52}" class="${i===4?'svg-label-accent':'svg-label-small'}">${r[0]}</text><text x="${480-i*6}" y="${144+i*52}" class="svg-label">${r[1]}</text><text x="740" y="${144+i*52}" class="svg-label-small">${r[2]}</text>`).join("")}
+        <line x1="274" y1="250" x2="340" y2="250" class="svg-line" marker-end="url(#${id})"/><path d="M970 250 C1014 250,1036 250,1074 250" class="svg-accent" marker-end="url(#${id}a)"/>
+        <rect x="1074" y="200" width="230" height="100" class="svg-node-accent"/><text x="1189" y="238" text-anchor="middle" class="svg-label-title">Adoptable Result</text><text x="1189" y="268" text-anchor="middle" class="svg-label">可采用结果</text>`);
+      if(type === "adoption") return svg(defs(id)+`
+        <text x="70" y="52" class="svg-label-small">AI OUTPUT → CONTROL BOUNDARY → ADOPTABLE RESULT</text>
+        <rect x="82" y="162" width="250" height="184" class="svg-node-soft"/>
+        <text x="207" y="208" text-anchor="middle" class="svg-label-title">普通 AI 输出</text>
+        <text x="207" y="246" text-anchor="middle" class="svg-label">生成文本 / 看似合理</text>
+        <text x="207" y="278" text-anchor="middle" class="svg-label">权限不明 / 错误难追踪</text>
+        <text x="207" y="310" text-anchor="middle" class="svg-label-small">not yet adoptable</text>
+
+        <path d="M420 96 L760 130 L760 370 L420 404 Z" fill="#F2F2EF" stroke="#D8D8D4"/>
+        <text x="590" y="152" text-anchor="middle" class="svg-label-title">控制边界</text>
+        <text x="590" y="180" text-anchor="middle" class="svg-label-small">CONTROL BOUNDARY</text>
+        <rect x="470" y="218" width="240" height="38" class="svg-node"/>
+        <rect x="470" y="268" width="240" height="38" class="svg-node"/>
+        <rect x="470" y="318" width="240" height="38" class="svg-node-accent"/>
+        <text x="590" y="243" text-anchor="middle" class="svg-label">检查 / 权限</text>
+        <text x="590" y="293" text-anchor="middle" class="svg-label">归因 / 审计</text>
+        <text x="590" y="343" text-anchor="middle" class="svg-label-accent">最终控制权</text>
+
+        <rect x="908" y="144" width="318" height="220" class="svg-node-accent"/>
+        <text x="1067" y="196" text-anchor="middle" class="svg-label-title">可采用结果</text>
+        <text x="1067" y="238" text-anchor="middle" class="svg-label">结构化输出</text>
+        <text x="1067" y="270" text-anchor="middle" class="svg-label">权限可分级</text>
+        <text x="1067" y="302" text-anchor="middle" class="svg-label">失败可归因</text>
+        <text x="1067" y="334" text-anchor="middle" class="svg-label-small">adoptable result</text>
+
+        <path d="M332 254 C370 254,388 254,420 250" class="svg-line" marker-end="url(#${id})"/>
+        <path d="M760 250 C816 250,852 250,908 250" class="svg-accent" marker-end="url(#${id}a)"/>
+        <text x="830" y="232" text-anchor="middle" class="svg-label-accent">authorized</text>`);
+      if(type === "responsibility") return svg(defs(id)+`
+        <text x="70" y="54" class="svg-label-small">RESPONSIBILITY LOOP</text>
+        <rect x="110" y="238" width="280" height="154" class="svg-node-soft"/><text x="250" y="288" text-anchor="middle" class="svg-label-title">AI</text><text x="250" y="322" text-anchor="middle" class="svg-label">检索 / 计算 / 提醒</text><text x="250" y="352" text-anchor="middle" class="svg-label">复盘 / 汇总</text>
+        <rect x="564" y="76" width="280" height="154" class="svg-node-accent"/><text x="704" y="126" text-anchor="middle" class="svg-label-title">人</text><text x="704" y="160" text-anchor="middle" class="svg-label">目标定义 / 风险承受</text><text x="704" y="190" text-anchor="middle" class="svg-label">最终判断 / 责任承担</text>
+        <rect x="1018" y="238" width="280" height="154" class="svg-node-soft"/><text x="1158" y="288" text-anchor="middle" class="svg-label-title">系统</text><text x="1158" y="322" text-anchor="middle" class="svg-label">权限 / 审计 / 风控</text><text x="1158" y="352" text-anchor="middle" class="svg-label">日志 / 回滚</text>
+        <path d="M390 274 C474 180,500 152,564 152" class="svg-line" marker-end="url(#${id})"/><path d="M844 152 C922 152,956 180,1018 274" class="svg-line" marker-end="url(#${id})"/><path d="M1018 354 C820 454,592 454,390 354" class="svg-accent" marker-end="url(#${id}a)"/>
+        <text x="704" y="452" text-anchor="middle" class="svg-label-accent">系统承接边界，避免 AI 与人之间直接裸连</text>`);
+      if(type === "dual") return svg(defs(id)+`
+        <text x="70" y="54" class="svg-label-small">DUAL-SOURCE VALIDATION</text>
+        <rect x="92" y="128" width="310" height="170" class="svg-node-soft"/><text x="247" y="174" text-anchor="middle" class="svg-label-title">交割数据</text><text x="247" y="212" text-anchor="middle" class="svg-label">买入时机 / 涨幅位置</text><text x="247" y="244" text-anchor="middle" class="svg-label">持仓时间 / 盈亏</text>
+        <rect x="1006" y="128" width="310" height="170" class="svg-node-soft"/><text x="1161" y="174" text-anchor="middle" class="svg-label-title">复盘笔记</text><text x="1161" y="212" text-anchor="middle" class="svg-label">锚定物 / 题材判断</text><text x="1161" y="244" text-anchor="middle" class="svg-label">情绪周期 / 操作依据</text>
+        <circle cx="704" cy="214" r="78" fill="#FAFAF8" stroke="#C84F3D" stroke-width="2"/><text x="704" y="204" text-anchor="middle" class="svg-label-title">交叉验证</text><text x="704" y="236" text-anchor="middle" class="svg-label-accent">Cross Validation</text>
+        <path d="M402 214 C512 214,574 214,626 214" class="svg-line" marker-end="url(#${id})"/><path d="M1006 214 C896 214,834 214,782 214" class="svg-line" marker-end="url(#${id})"/>
+        <line x1="704" y1="292" x2="704" y2="350" class="svg-accent" marker-end="url(#${id}a)"/><rect x="282" y="350" width="844" height="72" class="svg-node-accent"/><text x="704" y="386" text-anchor="middle" class="svg-label-title">模式识别 / 盘中提醒 / 智能复盘 / 交易 Skill</text>`);
+      if(type === "distill") return svg(defs(id)+`
+        <text x="70" y="52" class="svg-label-small">EVIDENCE → DISTILLATION → ALERT / RECOGNITION / REVIEW</text>
+        <rect x="82" y="116" width="250" height="118" class="svg-node-soft"/><text x="207" y="166" text-anchor="middle" class="svg-label-title" style="font-size:42px;">2764</text><text x="207" y="202" text-anchor="middle" class="svg-label">笔交割数据</text>
+        <rect x="82" y="276" width="250" height="118" class="svg-node-soft"/><text x="207" y="326" text-anchor="middle" class="svg-label-title" style="font-size:42px;">70+</text><text x="207" y="362" text-anchor="middle" class="svg-label">份复盘笔记</text>
+        <path d="M332 175 C420 194,464 220,520 250" class="svg-line" marker-end="url(#${id})"/><path d="M332 335 C420 310,464 280,520 250" class="svg-line" marker-end="url(#${id})"/>
+        <circle cx="640" cy="250" r="96" fill="#FAFAF8" stroke="#C84F3D" stroke-width="2"/><text x="640" y="238" text-anchor="middle" class="svg-label-title">模式蒸馏</text><text x="640" y="270" text-anchor="middle" class="svg-label-accent">Pattern Distillation</text>
+        <path d="M736 250 C796 250,822 250,872 250" class="svg-accent" marker-end="url(#${id}a)"/>
+        <rect x="872" y="92" width="290" height="74" class="svg-node"/><text x="1017" y="124" text-anchor="middle" class="svg-label-title">4%–10%</text><text x="1017" y="148" text-anchor="middle" class="svg-label-small">盘中涨幅区间提醒</text>
+        <rect x="872" y="198" width="290" height="74" class="svg-node"/><text x="1017" y="230" text-anchor="middle" class="svg-label-title">模式内 / 外识别</text><text x="1017" y="254" text-anchor="middle" class="svg-label-small">Pattern Recognition</text>
+        <rect x="872" y="304" width="290" height="74" class="svg-node"/><text x="1017" y="336" text-anchor="middle" class="svg-label-title">智能复盘</text><text x="1017" y="360" text-anchor="middle" class="svg-label-small">Review / Iteration</text>
+        <rect x="1198" y="198" width="160" height="116" class="svg-node-accent"/><text x="1278" y="240" text-anchor="middle" class="svg-label-title">人保留</text><text x="1278" y="272" text-anchor="middle" class="svg-label-title">最终判断</text>`);
+      if(type === "final") return svg(defs(id)+`
+        <text x="70" y="52" class="svg-label-small">EFFICIENCY / BOUNDARY / EXPERIENCE / GOVERNANCE → PANDAAI INFRASTRUCTURE</text>
+        ${["效率","边界","经验","治理"].map((t,i)=>`<rect x="84" y="${104+i*84}" width="170" height="54" class="svg-node-soft"/><text x="169" y="${138+i*84}" text-anchor="middle" class="svg-label">${t}</text>`).join("")}
+        <rect x="446" y="162" width="330" height="144" class="svg-node-accent"/><text x="611" y="214" text-anchor="middle" class="svg-label-title">PandaAI</text><text x="611" y="248" text-anchor="middle" class="svg-label-title">AI 量化基础设施</text><text x="611" y="282" text-anchor="middle" class="svg-label-small">AI Quant Infrastructure</text>
+        <path d="M254 131 C334 132,374 166,446 198" class="svg-line" marker-end="url(#${id})"/><path d="M254 215 C340 216,380 218,446 228" class="svg-accent" marker-end="url(#${id}a)"/><path d="M254 299 C340 292,382 270,446 250" class="svg-line" marker-end="url(#${id})"/><path d="M254 383 C342 350,380 300,446 272" class="svg-line" marker-end="url(#${id})"/>
+        ${["Data / Knowledge","Skill / Tools","Agent","Workflow","Governance"].map((t,i)=>`<rect x="892" y="${92+i*66}" width="210" height="52" class="${i===4?'svg-node-accent':'svg-node-soft'}"/><text x="997" y="${124+i*66}" text-anchor="middle" class="${i===4?'svg-label-accent':'svg-label-small'}">${t}</text>`).join("")}
+        <line x1="776" y1="234" x2="892" y2="250" class="svg-line" marker-end="url(#${id})"/>
+        <rect x="1130" y="156" width="220" height="168" fill="#FAFAF8" stroke="#D8D8D4"/><text x="1240" y="204" text-anchor="middle" class="svg-label-title" style="font-size:27px;">PandaAI 的价值</text><text x="1240" y="242" text-anchor="middle" class="svg-label-title" style="font-size:31px;">是系统组织。</text><line x1="1168" y1="266" x2="1312" y2="266" class="svg-accent"/><text x="1240" y="296" text-anchor="middle" class="svg-label-small">把 AI 放进可运行、可追踪、</text><text x="1240" y="318" text-anchor="middle" class="svg-label-small">可迭代的量化基础设施。</text>`);
+      return svg(`<text x="80" y="80" class="svg-label-title">${type}</text>`);
+    }
+
+    function toolSystem(){
+      return `<div class="main-zone"><svg viewBox="0 0 1408 500" aria-label="personal tool layer absorbed into institutional system">
+        <defs>
+          <marker id="tool" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#C8C8C3" stroke-width="1.2"/></marker>
+          <marker id="toola" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9" fill="none" stroke="#C84F3D" stroke-width="1.6"/></marker>
+        </defs>
+        <text x="70" y="52" class="svg-label-small">PERSONAL TOOL LAYER → SYSTEMIZATION → INSTITUTIONAL INFRASTRUCTURE</text>
+        <g>
+          <text x="100" y="98" class="svg-label-small">PERSONAL TOOL LAYER</text>
+          <rect x="86" y="126" width="196" height="58" class="svg-node-soft"/>
+          <rect x="86" y="206" width="196" height="58" class="svg-node-soft"/>
+          <rect x="86" y="286" width="196" height="58" class="svg-node-soft"/>
+          <rect x="86" y="366" width="196" height="58" class="svg-node-soft"/>
+          <text x="184" y="161" text-anchor="middle" class="svg-label">数据处理</text>
+          <text x="184" y="241" text-anchor="middle" class="svg-label">因子研究</text>
+          <text x="184" y="321" text-anchor="middle" class="svg-label">模型信号</text>
+          <text x="184" y="401" text-anchor="middle" class="svg-label">回测验证</text>
+        </g>
+        <path d="M282 155 C390 168,464 194,548 226" class="svg-line" marker-end="url(#tool)"/>
+        <path d="M282 235 C388 236,466 240,548 248" class="svg-line" marker-end="url(#tool)"/>
+        <path d="M282 315 C390 304,466 278,548 270" class="svg-line" marker-end="url(#tool)"/>
+        <path d="M282 395 C394 358,470 310,548 292" class="svg-line" marker-end="url(#tool)"/>
+        <path d="M548 116 L822 150 L822 356 L548 390 Z" fill="#F2F2EF" stroke="#D8D8D4"/>
+        <text x="685" y="184" text-anchor="middle" class="svg-label-title">系统化吸纳</text>
+        <text x="685" y="214" text-anchor="middle" class="svg-label-small">Systemization Layer</text>
+        <rect x="590" y="258" width="190" height="42" class="svg-node"/>
+        <text x="685" y="285" text-anchor="middle" class="svg-label">风控约束 / 策略管理</text>
+        <path d="M822 253 C868 253,898 253,936 253" class="svg-accent" marker-end="url(#toola)"/>
+        <g>
+          <text x="958" y="98" class="svg-label-small">INSTITUTIONAL SYSTEM LAYER</text>
+          <rect x="950" y="136" width="270" height="96" class="svg-node-accent"/>
+          <text x="1085" y="178" text-anchor="middle" class="svg-label-title">工作流</text>
+          <text x="1085" y="206" text-anchor="middle" class="svg-label-small">Workflow</text>
+          <rect x="950" y="282" width="270" height="96" class="svg-node"/>
+          <text x="1085" y="324" text-anchor="middle" class="svg-label-title">智能体</text>
+          <text x="1085" y="352" text-anchor="middle" class="svg-label-small">Agent</text>
+          <rect x="1262" y="170" width="74" height="174" fill="none" stroke="#D8D8D4"/>
+          <text x="1299" y="244" text-anchor="middle" class="svg-label-small">治理</text>
+          <text x="1299" y="268" text-anchor="middle" class="svg-label-small">复用</text>
+        </g>
+      </svg></div>`;
+    }
+
+    function warning(){
+      return `<div class="warning-grid"><div class="warning-copy"><h3 class="title title-m">效率叙事必须被切断</h3><p class="body" style="margin-top:20px;">速度会放大能力，也会放大错误。越靠近交易，越需要验证、日志、权限与风控。</p></div><div class="warning-panel">${["生成更快，<b>不代表更可信</b>","调用更多，<b>不代表更可控</b>","回测更快，<b>不代表样本外有效</b>","执行更快，<b>不代表风险更低</b>"].map((t,i)=>`<div class="warning-line"><div class="warning-num">0${i+1}</div><p>${t}</p></div>`).join("")}<div class="risk-note">如果缺少验证、日志、权限和风控，错误也会以更快速度进入交易链路。</div></div></div>`;
+    }
+
+    function split(){
+      return `<div class="split-zone"><div class="side-box"><svg class="side-svg" viewBox="0 0 190 190" aria-hidden="true"><path d="M95 32 A63 63 0 1 1 47 54" class="svg-line"/><path d="M47 54 L70 52 L58 74" fill="none" stroke="#9EBCCC" stroke-width="1.3"/><circle cx="95" cy="95" r="16" fill="none" stroke="#9EBCCC"/></svg><h3>投研侧</h3><ul><li>多轮检索</li><li>多次生成</li><li>多次回测</li><li>多次复盘</li></ul><div class="side-goal">目标：更快验证</div></div><div class="side-box"><svg class="side-svg" viewBox="0 0 190 190" aria-hidden="true"><rect x="44" y="38" width="102" height="116" fill="none" stroke="#C8C8C3"/><path d="M70 64 H120 M70 95 H120 M70 126 H120" class="svg-line-soft"/><path d="M146 38 V154" class="svg-accent"/></svg><h3>交易侧</h3><ul><li>真实成本</li><li>仓位变化</li><li>风险暴露</li><li>权限约束</li></ul><div class="side-goal">目标：可控采用</div></div></div>`;
+    }
+
+    function experience(){
+      return `<div style="margin-top:var(--gap-main);height:var(--main-h);display:grid;grid-template-columns:42% 58%;gap:30px;"><div class="panel" style="display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 680 500" style="width:82%;height:82%;display:block" aria-label="experience boundary layers">
+        <text x="54" y="48" class="svg-label-small">EXPERIENCE BOUNDARY LAYERS</text>
+        <rect x="126" y="102" width="428" height="266" fill="#EEF3F5" stroke="#D8D8D4"/>
+        <rect x="194" y="154" width="292" height="164" fill="#F5F5F3" stroke="#C8C8C3"/>
+        <rect x="262" y="206" width="156" height="82" fill="#FAFAF8" stroke="#C84F3D" stroke-width="2"/>
+        <text x="340" y="134" text-anchor="middle" class="svg-label-title">可沉淀</text>
+        <text x="340" y="186" text-anchor="middle" class="svg-label-title">可逼近</text>
+        <text x="340" y="254" text-anchor="middle" class="svg-label-title">必须保留</text>
+        <text x="340" y="280" text-anchor="middle" class="svg-label-accent">Human Core</text>
+        <text x="126" y="414" class="svg-label-small">越靠近内核，越不能被简单外包。</text>
+      </svg></div><div style="display:grid;grid-template-rows:1fr 1fr 1.18fr;gap:12px;">
+        <div class="panel" style="padding:20px 28px;display:flex;flex-direction:column;justify-content:center;"><h3 class="title title-m" style="font-size:28px;">可沉淀</h3><p class="body">交易记录 / 复盘逻辑 / 术语体系 / 固定规则</p></div>
+        <div class="panel" style="padding:20px 28px;display:flex;flex-direction:column;justify-content:center;"><h3 class="title title-m" style="font-size:28px;">可逼近</h3><p class="body">风格偏好 / 盘感片段 / 下单节奏 / 模式识别</p></div>
+        <div class="panel" style="padding:20px 28px;display:flex;flex-direction:column;justify-content:center;border-left:3px solid var(--accent);"><h3 class="title title-m" style="font-size:28px;color:var(--accent);">必须保留</h3><p class="body">最终责任 / 风险承受 / 模式内 / 外判断 / 范式切换</p></div>
+      </div></div>`;
+    }
+
+    function cover(s){
+      return `<div class="content cover-grid"><div class="copy"><div class="eyebrow">${s.eyebrow}</div><h1 class="cover-title">${s.title}</h1><div class="accent-line"></div><p class="cover-subtitle">${s.sub}</p><div class="meta"><span>上海国金中心<br>丽思卡尔顿酒店</span><span>AI Quant Trading Practice</span></div></div><div class="cover-panel"><svg viewBox="0 0 600 470" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%;display:block" aria-label="abstract trading chain visual"><defs><marker id="cover" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#C8C8C3" stroke-width="1.2"/></marker></defs><rect x="58" y="42" width="484" height="386" fill="none" stroke="#D8D8D4"/><path d="M96 330 C168 220,250 198,336 214 S468 160,514 92" class="svg-line" marker-end="url(#cover)"/><path d="M108 374 C174 310,238 286,324 292 S458 246,506 208" class="svg-line-soft"/><path d="M380 98 L380 378" class="svg-accent" opacity=".85"/><circle cx="126" cy="306" r="8" fill="#FAFAF8" stroke="#9EBCCC" stroke-width="1.4"/><circle cx="250" cy="218" r="8" fill="#FAFAF8" stroke="#9EBCCC" stroke-width="1.4"/><circle cx="356" cy="214" r="8" fill="#FAFAF8" stroke="#C84F3D" stroke-width="2"/><circle cx="470" cy="150" r="8" fill="#FAFAF8" stroke="#9EBCCC" stroke-width="1.4"/><text x="86" y="72" class="svg-label-small">TRADING CHAIN</text><text x="398" y="118" class="svg-label-accent">BOUNDARY</text><text x="118" y="354" class="svg-label-small">RESEARCH</text><text x="410" y="402" class="svg-label-small">CONTROL</text></svg></div></div>`;
+    }
+
+    function renderSlide(s){
+      const section = document.createElement("section");
+      section.className = "slide slide-" + String(s.n).padStart(2,"0") + (s.n===1 ? " active" : "");
+      section.dataset.title = s.title.replace(/<br>/g,"");
+      section.innerHTML = `<div class="brand"><div class="brand-left"><span class="logo-mark"></span>PandaAI</div><div class="brand-right">${s.part}</div></div>` +
+        (s.type === "cover" ? cover(s) : `<div class="content with-head"><div class="slide-head"><div><div class="eyebrow">${s.eyebrow}</div><h2 class="title title-l">${s.title}</h2></div><p class="subtitle">${s.sub}</p></div>${mainContent(s)}${bottom(s)}</div>`) +
+        `<div class="footer"><span>${s.footer}</span><span class="bar"></span><span><b>${String(s.n).padStart(2,"0")}</b>/17</span></div>`;
+      return section;
+    }
+
+    function mainContent(s){
+      if(s.type === "split") return split();
+      if(s.type === "toolSystem") return toolSystem();
+      if(s.type === "warning") return warning();
+      if(s.type === "experience") return experience();
+      return `<div class="main-zone">${diagram(s.type, s.n)}</div>`;
+    }
+
+    function bottom(s){
+      if(s.bottomGrid) return `<div class="bottom-strip grid2">${s.bottomGrid.map(x=>{ const [b,t]=x.split("|"); return `<div><b>${b}</b>${t}</div>` }).join("")}</div>`;
+      if(!s.bottom) return `<div class="bottom-strip" style="border-top:0;min-height:0;padding-top:0;"></div>`;
+      return `<div class="bottom-strip">${s.bottom}</div>`;
+    }
+
+    const deck = document.getElementById("deck");
+    slides.forEach(s => deck.appendChild(renderSlide(s)));
+
+    const slideNodes = [...document.querySelectorAll(".slide")];
+    const progress = document.getElementById("progress");
+    let index = 0;
+
+    function show(i){
+      index = Math.max(0, Math.min(slideNodes.length - 1, i));
+      slideNodes.forEach((slide,n)=>slide.classList.toggle("active", n===index));
+      progress.style.width = ((index + 1) / slideNodes.length * 100) + "%";
+      document.title = `${String(index+1).padStart(2,"0")}｜${slideNodes[index].dataset.title || "AI 与人在交易中的效率与边界"}`;
+    }
+
+    document.addEventListener("keydown", e => {
+      if(["ArrowRight"," ","PageDown"].includes(e.key)){ e.preventDefault(); show(index+1); }
+      if(["ArrowLeft","PageUp"].includes(e.key)){ e.preventDefault(); show(index-1); }
+      if(e.key === "Home") show(0);
+      if(e.key === "End") show(slideNodes.length-1);
+      if(e.key.toLowerCase() === "f"){ document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); }
+      if(e.key.toLowerCase() === "p") window.print();
+    });
+    show(0);
+  </script>
+</body>
+</html>
