@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML 演示发布索引</title>
+  <style>
+    :root { --bg:#f4f4f1; --panel:#fff; --ink:#202326; --text:#5a6066; --muted:#8d949b; --line:#d8d9d6; --accent:#b84a3a; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif; line-height: 1.6; }
+    main { width: min(960px, calc(100vw - 40px)); margin: 56px auto; }
+    header { border-bottom: 1px solid var(--line); padding-bottom: 20px; margin-bottom: 24px; }
+    h1 { margin: 0 0 8px; font-size: 32px; font-weight: 650; letter-spacing: 0; }
+    p { margin: 0; color: var(--text); font-size: 15px; }
+    .list { display: grid; gap: 12px; }
+    .item { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; }
+    .title { display: block; color: var(--ink); font-size: 18px; font-weight: 600; text-decoration: none; }
+    .title:hover { color: var(--accent); }
+    .meta { margin-top: 4px; color: var(--muted); font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .open { color: var(--accent); text-decoration: none; font-size: 14px; font-weight: 600; white-space: nowrap; }
+    @media (max-width: 640px) { main { margin: 32px auto; } .item { grid-template-columns: 1fr; } h1 { font-size: 26px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>HTML 演示发布索引</h1>
+      <p>每个页面都有固定路径；更新内容时覆盖原路径，历史版本由 Git 保存。</p>
+    </header>
+    <section class="list" aria-label="Published pages">
+      <article class="item">
+        <div>
+          <a class="title" href="pages/ai-trading-boundary/">AI 与人在交易中的效率与边界</a>
+          <div class="meta">pages/ai-trading-boundary/ · updated 2026-05-07</div>
+        </div>
+        <a class="open" href="pages/ai-trading-boundary/">打开页面</a>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
