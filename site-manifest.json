@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-07",
+  "updated_at": "2026-05-09",
   "items": [
     {
       "slug": "ai-trading-boundary",
@@ -7,6 +7,14 @@
       "path": "pages/ai-trading-boundary/",
       "status": "active",
       "updated_at": "2026-05-07"
+    },
+    {
+      "slug": "ai-trading-boundary-dark-atlas-v2",
+      "title": "AI 与人在交易中的效率与边界 - Dark Atlas v2",
+      "path": "pages/ai-trading-boundary-dark-atlas-v2/",
+      "source_archive": "html/2026-05-09_102314_ai-trading-boundary-dark-atlas-v2.html",
+      "status": "active",
+      "updated_at": "2026-05-09"
     }
   ]
 }

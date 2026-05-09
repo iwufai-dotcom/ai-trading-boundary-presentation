@@ -4,3 +4,18 @@ Thumbs.db
 .env
 .env.*
 node_modules/
+.pycache/
+__pycache__/
+
+# This is a public GitHub Pages repo. Project archives belong in a private repo.
+projects/
+archive-private/
+
+# Local secrets and credentials should never be published.
+*.pem
+*.key
+*.p12
+*.pfx
+*token*
+*secret*
+*credential*

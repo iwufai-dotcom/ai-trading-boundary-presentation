@@ -1,0 +1,21 @@
+# HTML 上传记录
+
+此文件由 `scripts/publish_html.py` 自动追加，也可以在人工发布后手动补记。
+
+## 2026-05-08 - AI 与人在交易中的效率与边界
+
+- slug: `ai-trading-boundary`
+- archived_html: historical import before automatic `html/` archiving
+- public_path: `pages/ai-trading-boundary/`
+- public_url: `https://iwufai-dotcom.github.io/ai-trading-boundary-presentation/pages/ai-trading-boundary/`
+- risk_check: public demo page, no project archive content stored here
+
+## 2026-05-09 10:23:14 - AI 与人在交易中的效率与边界 - Dark Atlas v2
+
+- slug: `ai-trading-boundary-dark-atlas-v2`
+- source_name: `index.html`
+- archived_html: `html/2026-05-09_102314_ai-trading-boundary-dark-atlas-v2.html`
+- public_path: `pages/ai-trading-boundary-dark-atlas-v2/`
+- resources: `styles.css, assets/generated/dark-atlas-v2-round1`
+- path_replacements: `../../assets/generated/` -> `./assets/generated/`
+- risk_check: reviewed before push; public demo page only, no secrets or private project archive content found
