@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 与人在交易中的效率与边界 - Dark Atlas v2</title>
+  <style>
+    :root { --bg:#05070a; --panel:#11191f; --text:#eee8dc; --soft:#cbd4d4; --muted:#8f9ba0; --line:rgba(155,176,184,.28); --blue:#79a7bf; --copper:#d46b52; --amber:#c99a56; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:radial-gradient(circle at 18% 18%, rgba(121,167,191,.18), transparent 28%), radial-gradient(circle at 82% 12%, rgba(212,107,82,.14), transparent 30%), var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.65; }
+    main { width:min(1080px, calc(100vw - 36px)); margin:0 auto; padding:48px 0 72px; }
+    header { min-height:72vh; display:grid; align-content:center; border-bottom:1px solid var(--line); }
+    .kicker { color:var(--blue); font:700 13px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.08em; text-transform:uppercase; }
+    h1 { margin:18px 0 18px; font-size:clamp(38px, 7vw, 82px); line-height:1.04; letter-spacing:0; max-width:900px; }
+    .subtitle { max-width:760px; color:var(--soft); font-size:clamp(18px, 2vw, 24px); }
+    .event { margin-top:28px; color:var(--muted); font-size:15px; }
+    section { padding:34px 0; border-bottom:1px solid var(--line); }
+    h2 { margin:0 0 10px; font-size:clamp(25px, 3vw, 42px); line-height:1.15; letter-spacing:0; }
+    p { margin:0; color:var(--soft); font-size:17px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:14px; margin-top:18px; }
+    .card { border:1px solid var(--line); background:rgba(17,25,31,.74); border-radius:8px; padding:18px; }
+    .card b { display:block; margin-bottom:6px; color:var(--amber); }
+    .num { color:var(--copper); font:700 13px/1 ui-monospace,SFMono-Regular,Menlo,monospace; margin-bottom:12px; }
+    footer { padding-top:32px; color:var(--muted); font-size:14px; }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="kicker">PandaAI Trade / Dark Atlas v2</div>
+    <h1>AI 与人在交易中的效率与边界</h1>
+    <p class="subtitle">关于 AI 量化工具、交易实践与系统边界的阶段思考。</p>
+    <div class="event">5.13 金工论坛 / 上海国金中心丽思卡尔顿酒店 / PandaAI 创始人 李昱琦</div>
+  </header>
+
+  <section><div class="num">01</div><h2>AI 在交易链路中的位置</h2><p>真正的问题，不是 AI 能不能交易，而是 AI 在交易链路中应该站在哪里。</p><div class="grid"><div class="card"><b>投研侧</b>效率放大，适合多轮检索、生成、回测和复盘。</div><div class="card"><b>模型侧</b>生成是过程，验证、采用与控制才是结果。</div><div class="card"><b>交易侧</b>必须面对真实成本、仓位变化、风险暴露和权限约束。</div></div></section>
+  <section><div class="num">02</div><h2>投研放大效率，交易保留边界</h2><p>投研侧强调效率，交易侧强调边界。AI 可以让研究更快进入验证，但不能绕过交易系统的控制要求。</p></section>
+  <section><div class="num">03</div><h2>从想法到验证的距离</h2><p>AI 先改变的，是从想法到验证的距离。它缩短了研究表达、代码生成、回测组织和复盘沉淀的链路。</p></section>
+  <section><div class="num">04</div><h2>个人效率，会走向系统效率</h2><p>当效率问题进入机构场景，它不再是个人工具问题，而是系统建设问题。</p></section>
+  <section><div class="num">05</div><h2>机构投研系统</h2><p>机构投研的效率，不在于一个环节，而是可延续的链路系统。</p></section>
+  <section><div class="num">06</div><h2>能力组织：Data / Skill / Agent</h2><p>只会回答问题的 AI，还进不了交易流程。数据、技能与智能体需要被组织成可追踪、可验证的工作流。</p></section>
+  <section><div class="num">07</div><h2>知识工程与多智能体编排</h2><p>复杂的投研任务，需要工程化体系：知识库、任务分解、工具调用、状态记录和结果审计。</p></section>
+  <section><div class="num">08</div><h2>效率越高，越需要边界</h2><p>AI 可以降低研究与工程门槛，但不会降低市场赚钱的门槛。</p></section>
+  <section><div class="num">09</div><h2>研究结果的验证边界</h2><p>AI 可以加速试错，但不能替代验证。生成结论必须经过数据、回测、情境和风险约束检验。</p></section>
+  <section><div class="num">10</div><h2>交易结果的控制边界</h2><p>AI 的回答，不等于系统可以采用的结果。生产级金融 Agent 需要权限、审计、回滚、风控和可解释的采用标准。</p></section>
+  <section><div class="num">11</div><h2>生产级金融 Agent</h2><p>输出进入交易系统，关键就从“回答质量”变成“可采用性”。</p></section>
+  <section><div class="num">12</div><h2>AI 不能替人承担交易后果</h2><p>AI 可以整理、分析、提醒和复盘；人仍然定义目标、风险承受、范式选择和最终责任。</p></section>
+  <section><div class="num">13</div><h2>交易员的经验，能不能变成 AI 分身？</h2><p>显性规则、复盘逻辑、交易记录和术语体系可以沉淀；但盘感、风险承受和最终判断不能简单外包。</p></section>
+  <section><div class="num">14</div><h2>双源验证</h2><p>成熟交易者的历史行为和复盘逻辑，可以交叉验证，沉淀为交易 Skill；最终判断仍由交易者保留。</p></section>
+  <section><div class="num">15</div><h2>交易模式蒸馏案例</h2><p>把经验变成可提醒、可复盘、可迭代的系统。</p></section>
+  <section><div class="num">16</div><h2>把效率放进边界，把 AI 放进系统</h2><p>PandaAI 的目标，是把数据、知识、Skill、Agent、工作流、回测、仿真、实盘、审计和复盘组织成可运行、可追踪、可迭代的 AI 量化基础设施。</p></section>
+
+  <footer>Connector-only text version. No PNG image assets are included in this publish.</footer>
+</main>
+</body>
+</html>
