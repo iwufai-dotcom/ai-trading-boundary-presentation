@@ -32,20 +32,21 @@ body {
   background: #000;
   color: var(--atlas-text);
   font-family: var(--font-sans);
-  overflow: hidden;
 }
 
 body {
   display: grid;
   place-items: center;
+  overflow: hidden;
 }
 
 .deck {
   position: relative;
-  width: 1920px;
-  height: 1080px;
-  flex: 0 0 auto;
-  transform-origin: center center;
+  width: 100vw;
+  height: 100vh;
+  max-width: 177.7778vh;
+  max-height: 56.25vw;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: var(--atlas-bg-0);
 }
@@ -180,8 +181,8 @@ body {
   left: 46px;
   top: 42px;
   z-index: 8;
-  width: 178px;
-  height: 30px;
+  width: 267px;
+  height: 45px;
   background: url("./brand-logo.png") no-repeat left center / contain;
   overflow: hidden;
   text-indent: -9999px;
@@ -190,8 +191,8 @@ body {
 }
 
 .brand.small {
-  width: 126px;
-  height: 21px;
+  width: 189px;
+  height: 32px;
 }
 
 .brand-mark,

@@ -28,3 +28,12 @@
 - resources: `styles.css, brand-logo.png, plates`
 - risk_check: pending manual review before push
 
+## 2026-05-11 19:43:35 - AI 与人在交易中的效率与边界 - Dark Atlas v2
+
+- slug: `ai-trading-boundary-dark-atlas-v2`
+- source_name: `index.html`
+- archived_html: `html/2026-05-11_194335_ai-trading-boundary-dark-atlas-v2.html`
+- public_path: `pages/ai-trading-boundary-dark-atlas-v2/`
+- resources: `styles.css, brand-logo.png, plates`
+- risk_check: pending manual review before push
+
