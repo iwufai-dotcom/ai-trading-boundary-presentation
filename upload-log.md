@@ -19,3 +19,12 @@
 - resources: `styles.css, assets/generated/dark-atlas-v2-round1`
 - path_replacements: `../../assets/generated/` -> `./assets/generated/`
 - risk_check: reviewed before push; public demo page only, no secrets or private project archive content found
+## 2026-05-11 18:57:49 - AI 与人在交易中的效率与边界 - Dark Atlas v2
+
+- slug: `ai-trading-boundary-dark-atlas-v2`
+- source_name: `index.html`
+- archived_html: `html/2026-05-11_185749_ai-trading-boundary-dark-atlas-v2.html`
+- public_path: `pages/ai-trading-boundary-dark-atlas-v2/`
+- resources: `styles.css, brand-logo.png, plates`
+- risk_check: pending manual review before push
+
