@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-11",
+  "updated_at": "2026-05-15",
   "items": [
     {
       "slug": "ai-trading-boundary",
@@ -15,6 +15,14 @@
       "source_archive": "html/2026-05-11_194335_ai-trading-boundary-dark-atlas-v2.html",
       "status": "active",
       "updated_at": "2026-05-11"
+    },
+    {
+      "slug": "panda-fund-ai-assistant-roadshow-full-v01",
+      "title": "PandaAI 私募基金数据 AI 助手发布会｜路演完整稿",
+      "path": "pages/panda-fund-ai-assistant-roadshow-full-v01/",
+      "source_archive": "html/2026-05-15_174725_panda-fund-ai-assistant-roadshow-full-v01.html",
+      "status": "active",
+      "updated_at": "2026-05-15"
     }
   ]
 }

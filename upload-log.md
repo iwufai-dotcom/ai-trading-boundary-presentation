@@ -37,3 +37,11 @@
 - resources: `styles.css, brand-logo.png, plates`
 - risk_check: pending manual review before push
 
+## 2026-05-15 17:47:25 - PandaAI 私募基金数据 AI 助手发布会｜路演完整稿
+
+- slug: `panda-fund-ai-assistant-roadshow-full-v01`
+- source_name: `index.html`
+- archived_html: `html/2026-05-15_174725_panda-fund-ai-assistant-roadshow-full-v01.html`
+- public_path: `pages/panda-fund-ai-assistant-roadshow-full-v01/`
+- resources: `styles.css, assets`
+- risk_check: reviewed before push; public demo page only, no local paths, secrets, or private project archive content found
