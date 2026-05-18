@@ -45,3 +45,12 @@
 - public_path: `pages/panda-fund-ai-assistant-roadshow-full-v01/`
 - resources: `styles.css, assets`
 - risk_check: reviewed before push; public demo page only, no local paths, secrets, or private project archive content found
+
+## 2026-05-18 16:36:01 - PandaAI 私募基金数据 AI 助手发布会｜路演完整稿
+
+- slug: `panda-fund-ai-assistant-roadshow-full-v01`
+- source_name: `index.html`
+- archived_html: `html/2026-05-18_163601_panda-fund-ai-assistant-roadshow-full-v01.html`
+- public_path: `pages/panda-fund-ai-assistant-roadshow-full-v01/`
+- resources: `styles.css, assets`
+- risk_check: reviewed before push; public demo page only, no local paths, secrets, or private project archive content found

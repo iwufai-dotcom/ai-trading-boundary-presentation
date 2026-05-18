@@ -1,4 +1,5 @@
 :root {
+  --deck-aspect: 16 / 9;
   --bg: #f5f5f3;
   --ink: #2e3031;
   --text: #4f5354;
@@ -36,11 +37,9 @@ body {
 
 .deck {
   position: relative;
-  width: 100vw;
-  height: 100vh;
-  max-width: 177.7778vh;
-  max-height: 56.25vw;
-  aspect-ratio: 16 / 9;
+  width: min(100vw, calc(100vh * 16 / 9));
+  height: min(100vh, calc(100vw * 9 / 16));
+  aspect-ratio: var(--deck-aspect);
   overflow: hidden;
   background: var(--bg);
   box-shadow: 0 18px 70px rgba(34, 37, 38, 0.16);
@@ -287,11 +286,15 @@ h3 {
 .demo-board,
 .task-stack article,
 .evaluation-layer,
-.formula-panel,
+.evaluation-loop-panel,
+.cq-scope-panel,
+.cq-heatmap-panel,
 .gate-card,
 .suitability-modules article,
 .continuation-grid article,
-.paradigm-item {
+.paradigm-item,
+.paradigm-card,
+.paradigm-foundation {
   border: 1px solid var(--line-strong);
   background: rgba(255, 255, 255, 0.36);
 }
@@ -565,6 +568,138 @@ h3 {
   font-weight: 700;
 }
 
+.cq-title h2 {
+  font-size: 56px;
+}
+
+.cq-scope-panel {
+  position: absolute;
+  left: 90px;
+  top: 330px;
+  width: 420px;
+  height: 440px;
+  padding: 28px 28px;
+}
+
+.cq-scope-panel h3 {
+  margin-bottom: 26px;
+  font-family: var(--font-serif);
+  font-size: 36px;
+}
+
+.cq-scope-panel article {
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
+}
+
+.cq-scope-panel b {
+  color: var(--ink);
+  font-size: 21px;
+}
+
+.cq-scope-panel p {
+  margin-top: 12px;
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.55;
+  font-weight: 700;
+}
+
+.cq-heatmap-panel {
+  position: absolute;
+  right: 90px;
+  top: 330px;
+  width: 910px;
+  height: 440px;
+  padding: 28px 30px;
+}
+
+.cq-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.cq-panel-head h3 {
+  font-size: 25px;
+}
+
+.cq-panel-head span {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.cq-heatmap {
+  display: grid;
+  grid-template-columns: 158px repeat(9, 1fr);
+  gap: 7px;
+  margin-top: 26px;
+}
+
+.cq-head,
+.cq-model,
+.cq-score {
+  display: grid;
+  min-height: 49px;
+  place-items: center;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.cq-head {
+  min-height: 38px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.12em;
+}
+
+.cq-model {
+  justify-content: start;
+  padding-left: 14px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.42);
+  text-align: left;
+}
+
+.cq-model-highlight {
+  border-color: rgba(200, 79, 61, 0.42);
+  background: rgba(200, 79, 61, 0.08);
+  color: var(--accent);
+}
+
+.cq-score {
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  font-family: var(--font-mono);
+}
+
+.score-4 { background: rgba(185, 194, 189, 0.30); }
+.score-6 { background: rgba(159, 185, 196, 0.42); }
+.score-7 { background: rgba(159, 185, 196, 0.56); }
+.score-8 { background: rgba(200, 222, 232, 0.75); }
+.score-9 { background: rgba(200, 79, 61, 0.28); }
+.score-10 { background: rgba(200, 79, 61, 0.52); }
+
+.cq-highlight {
+  border-color: rgba(200, 79, 61, 0.46);
+  box-shadow: inset 0 0 0 1px rgba(200, 79, 61, 0.12);
+}
+
+.cq-note {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 15.5px;
+  line-height: 1.5;
+}
+
 .query-strip {
   position: absolute;
   left: 90px;
@@ -608,7 +743,8 @@ h3 {
 
 .demo-header b,
 .table-head,
-.formula-panel .eyebrow {
+.evaluation-loop-panel .eyebrow,
+.cq-scope-panel .eyebrow {
   color: var(--accent);
   font-family: var(--font-mono);
   font-size: 12px;
@@ -715,9 +851,13 @@ h3 {
   line-height: 1.35;
 }
 
-.slide-05 .bottom-thesis {
+.slide-06 .bottom-thesis {
   bottom: 54px;
   font-size: 23px;
+}
+
+.slide-07 .page-num {
+  right: 38px;
 }
 
 .evaluation-grid {
@@ -758,37 +898,92 @@ h3 {
   text-align: center;
 }
 
-.formula-panel {
+.evaluation-loop-panel {
   position: absolute;
-  right: 90px;
-  top: 342px;
-  width: 420px;
-  min-height: 308px;
-  padding: 34px 34px;
+  right: 40px;
+  top: 326px;
+  width: 560px;
+  height: 420px;
+  padding: 26px 28px;
 }
 
-.formula-panel h3 {
-  margin: 20px 0 24px;
-  font-family: var(--font-serif);
-  font-size: 38px;
+.evaluation-loop {
+  position: relative;
+  height: 326px;
+  margin-top: 28px;
 }
 
-.formula-panel p:not(.eyebrow) {
-  color: var(--ink);
-  font-size: 24px;
-  line-height: 1.48;
-  font-weight: 700;
+.loop-arrow {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  width: 236px;
+  height: 236px;
+  transform: translate(-50%, -50%);
+  overflow: visible;
 }
 
-.formula-panel span {
+.loop-arrow path {
+  fill: none;
+  stroke: rgba(200, 79, 61, 0.62);
+  stroke-width: 1.35;
+  marker-end: url(#loop-arrow-head);
+}
+
+.loop-arrow marker path {
+  fill: var(--accent);
+  stroke: none;
+}
+
+.loop-card {
+  position: absolute;
+  z-index: 5;
+  display: grid;
+  width: 150px;
+  height: 112px;
+  align-content: start;
+  gap: 6px;
+  padding: 11px 11px;
+  border: 1px solid rgba(216, 216, 212, 0.82);
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.loop-card i {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid rgba(200, 79, 61, 0.34);
+  background: rgba(200, 79, 61, 0.06);
+}
+
+.loop-card svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.loop-card b {
   display: block;
-  margin-top: 26px;
-  padding-top: 18px;
-  border-top: 1px solid var(--line);
-  color: var(--text);
-  font-size: 16px;
-  line-height: 1.5;
+  color: var(--ink);
+  font-size: 17px;
 }
+
+.loop-card span {
+  display: block;
+  color: var(--text);
+  font-size: 11px;
+  line-height: 1.26;
+}
+
+.loop-a { left: 64px; top: 0; }
+.loop-b { right: 42px; top: 0; }
+.loop-c { right: 42px; top: 166px; }
+.loop-d { left: 64px; top: 166px; }
 
 .gate-flow {
   position: absolute;
@@ -1000,13 +1195,14 @@ h3 {
 }
 
 .paradigm-center {
-  width: 285px;
-  height: 220px;
+  width: 270px;
+  height: 205px;
   border-radius: 0;
+  transform: translate(-50%, -62%);
 }
 
 .paradigm-center span {
-  font-size: 29px;
+  font-size: 27px;
   line-height: 1.26;
 }
 
@@ -1052,6 +1248,116 @@ h3 {
   bottom: -8px;
   transform: translateX(-50%);
 }
+
+.paradigm-composition {
+  position: absolute;
+  left: 120px;
+  right: 120px;
+  top: 292px;
+  height: 432px;
+}
+
+.paradigm-composition::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 37.5%;
+  width: 560px;
+  height: 260px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(111, 152, 167, 0.24);
+}
+
+.paradigm-core {
+  position: absolute;
+  left: 50%;
+  top: 37.5%;
+  z-index: 3;
+  display: grid;
+  width: 305px;
+  height: 175px;
+  place-content: center;
+  gap: 8px;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--line-strong);
+  background: rgba(255, 255, 255, 0.62);
+  text-align: center;
+}
+
+.paradigm-core span,
+.paradigm-core b {
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-weight: 700;
+}
+
+.paradigm-core span {
+  font-size: 27px;
+}
+
+.paradigm-core b {
+  font-size: 31px;
+}
+
+.paradigm-core em {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-style: normal;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.paradigm-card {
+  position: absolute;
+  z-index: 4;
+  width: 318px;
+  min-height: 112px;
+  padding: 20px 22px;
+}
+
+.paradigm-foundation {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 4;
+  width: 460px;
+  min-height: 92px;
+  padding: 20px 24px;
+  transform: translateX(-50%);
+}
+
+.paradigm-card h3,
+.paradigm-foundation h3 {
+  position: relative;
+  padding-left: 17px;
+  font-size: 23px;
+}
+
+.paradigm-card h3::before,
+.paradigm-foundation h3::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 3px;
+  height: 21px;
+  background: var(--accent);
+}
+
+.paradigm-card p,
+.paradigm-foundation p {
+  margin-top: 11px;
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.42;
+}
+
+.cap-a { left: 0; top: 0; }
+.cap-b { right: 0; top: 0; }
+.cap-c { left: 0; top: 184px; }
+.cap-d { right: 0; top: 184px; }
 
 .closing-copy {
   position: absolute;
@@ -1129,7 +1435,18 @@ h3 {
   color: var(--accent);
 }
 
+@page {
+  size: 16in 9in;
+  margin: 0;
+}
+
 @media print {
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+  }
+
   body {
     display: block;
     background: white;
@@ -1137,14 +1454,20 @@ h3 {
 
   .deck {
     width: 100vw;
-    height: 56.25vw;
+    height: auto;
     max-width: none;
     max-height: none;
+    aspect-ratio: var(--deck-aspect);
+    overflow: visible;
     box-shadow: none;
   }
 
   .slide {
-    page-break-after: always;
+    position: relative;
+    display: block;
+    width: 100vw;
+    height: calc(100vw * 9 / 16);
+    break-after: page;
   }
 
   .nav {
