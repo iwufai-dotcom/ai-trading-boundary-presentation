@@ -1,0 +1,1486 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="html-slides v0.9.4">
+  <title>PandaAI 社区直播第 9 期｜Quant Agent 全流程实战</title>
+  <style>
+    /* === Theme Tokens === */
+    :root {
+      --bg: #fcfcfc;
+      --ink: #111111;
+      --muted: #3e3e38;
+      --soft: rgba(17, 17, 17, 0.14);
+      --faint: rgba(17, 17, 17, 0.06);
+      --grid: rgba(18, 18, 18, 0.042);
+      --accent: #0f6f5f;
+      --accent-soft: rgba(15, 111, 95, 0.12);
+      --warn: #a64221;
+      --slide-padding: clamp(44px, 5.8vw, 92px);
+      --font-display: "Arial Black", "PingFang SC", "Microsoft YaHei", "Heiti SC", sans-serif;
+      --font-body: "PingFang SC", "Microsoft YaHei", "Heiti SC", sans-serif;
+      --font-logo: "DIN Alternate", "Arial Narrow", "PingFang SC", sans-serif;
+      --title: clamp(54px, 6.2vw, 90px);
+      --h1: clamp(44px, 4.9vw, 74px);
+      --h2: clamp(30px, 3.25vw, 48px);
+      --body: clamp(16px, 1.35vw, 21px);
+      --small: clamp(12px, 0.95vw, 15px);
+    }
+
+    /* === Reset === */
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; overflow: hidden; }
+    body {
+      background: #111;
+      color: var(--ink);
+      font-family: var(--font-body);
+    }
+    h1, h2, h3, p { margin: 0; }
+    img { display: block; max-width: 100%; }
+
+    /* === Deck Runtime === */
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      position: relative;
+    }
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      scroll-snap-align: start;
+      display: none;
+      flex-direction: column;
+      position: relative;
+      background:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+        var(--bg);
+      background-size: clamp(42px, 4.45vw, 64px) clamp(42px, 4.45vw, 64px);
+    }
+    .slide.active { display: flex; }
+    .slide-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-height: 100%;
+      overflow: hidden;
+      padding: var(--slide-padding);
+      position: relative;
+      z-index: 2;
+    }
+
+    /* === Master Layer === */
+    .master-logo {
+      position: absolute;
+      left: clamp(72px, 7.7vw, 116px);
+      top: clamp(44px, 6.4vh, 74px);
+      width: clamp(174px, 18.2vw, 252px);
+      z-index: 4;
+      pointer-events: none;
+    }
+    .dots {
+      position: absolute;
+      z-index: 1;
+      pointer-events: none;
+      background-image: radial-gradient(circle, var(--ink) 0 clamp(4px, 0.38vw, 6px), transparent clamp(4.5px, 0.44vw, 7px));
+      background-size: clamp(18px, 1.65vw, 24px) clamp(18px, 1.65vw, 24px);
+      opacity: 0.96;
+    }
+    .dots.top-right {
+      width: clamp(150px, 14vw, 205px);
+      height: clamp(36px, 3.6vw, 52px);
+      right: clamp(88px, 8.8vw, 142px);
+      top: clamp(64px, 8.4vh, 98px);
+    }
+    .dots.bottom-left {
+      width: clamp(420px, 43vw, 620px);
+      height: clamp(36px, 3.5vw, 50px);
+      left: clamp(70px, 7.8vw, 120px);
+      bottom: clamp(76px, 9.2vh, 110px);
+    }
+    .brand-corner {
+      position: absolute;
+      right: calc(-1 * clamp(112px, 10vw, 162px));
+      bottom: calc(-1 * clamp(116px, 10vw, 168px));
+      width: clamp(258px, 23vw, 350px);
+      height: clamp(258px, 23vw, 350px);
+      border-radius: 50%;
+      background: var(--ink);
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      padding: clamp(62px, 6.2vw, 92px);
+      pointer-events: none;
+    }
+    .cover .brand-corner {
+      right: calc(-1 * clamp(84px, 7.6vw, 126px));
+      bottom: calc(-1 * clamp(90px, 8.2vw, 138px));
+      width: clamp(296px, 28vw, 420px);
+      height: clamp(296px, 28vw, 420px);
+    }
+    .brand-lockup {
+      transform: translate(-12%, -14%);
+      display: grid;
+      justify-items: center;
+      gap: clamp(8px, 0.9vw, 12px);
+      color: #fff;
+      font-family: var(--font-logo);
+      font-weight: 900;
+      line-height: 1;
+      font-size: clamp(12px, 1.05vw, 16px);
+      letter-spacing: 0;
+    }
+    .brand-lockup img {
+      width: clamp(48px, 4.8vw, 70px);
+      max-height: none;
+    }
+    .slide-number {
+      position: absolute;
+      left: clamp(72px, 7.7vw, 116px);
+      bottom: clamp(42px, 5.2vh, 62px);
+      z-index: 3;
+      font-family: var(--font-logo);
+      font-weight: 800;
+      font-size: clamp(12px, 1vw, 15px);
+      color: rgba(17, 17, 17, 0.42);
+      letter-spacing: 0.08em;
+    }
+
+    /* === Shared Type === */
+    .shell {
+      width: min(76vw, 1060px);
+      margin: 0 auto;
+      display: grid;
+      justify-items: center;
+      position: relative;
+      transform: translateY(clamp(18px, 3.1vh, 42px));
+    }
+    .kicker {
+      font-size: clamp(15px, 1.25vw, 18px);
+      line-height: 1.18;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      font-weight: 700;
+      text-align: center;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .page-title {
+      font-family: var(--font-display);
+      font-size: var(--h1);
+      line-height: 1.05;
+      font-weight: 950;
+      letter-spacing: 0;
+      text-align: center;
+      max-width: 1040px;
+    }
+    .page-title .line { display: block; }
+    .page-subtitle {
+      font-size: clamp(20px, 2.05vw, 30px);
+      line-height: 1.25;
+      color: var(--muted);
+      font-weight: 700;
+      text-align: center;
+      max-width: 940px;
+      margin-top: clamp(10px, 1.3vh, 16px);
+    }
+    .rule {
+      width: min(72vw, 940px);
+      height: 2px;
+      background: var(--ink);
+      margin: clamp(20px, 2.8vh, 32px) 0;
+    }
+    .soft-rule {
+      width: min(68vw, 880px);
+      height: 1px;
+      background: var(--soft);
+      margin: clamp(14px, 2vh, 24px) 0;
+    }
+    .keep { white-space: nowrap; }
+    .accent { color: var(--accent); }
+
+    /* === P01 Cover === */
+    .cover-core {
+      width: min(77vw, 1080px);
+      margin: 0 auto;
+      text-align: center;
+      transform: translateY(clamp(44px, 6.2vh, 70px));
+      display: grid;
+      justify-items: center;
+      gap: clamp(8px, 1.15vh, 14px);
+    }
+    .cover-title {
+      font-family: var(--font-display);
+      font-size: clamp(56px, 6.4vw, 96px);
+      line-height: 1.08;
+      font-weight: 950;
+      letter-spacing: 0;
+      text-align: center;
+    }
+    .cover-title span { display: block; }
+    .cover-subtitle {
+      margin-top: clamp(12px, 1.6vh, 18px);
+      font-size: clamp(27px, 2.9vw, 42px);
+      line-height: 1.14;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      border-top: 2px solid var(--ink);
+      border-bottom: 1px solid var(--soft);
+      padding: clamp(10px, 1.25vh, 16px) clamp(18px, 2vw, 30px);
+    }
+    .cover-meta {
+      margin-top: clamp(10px, 1.7vh, 20px);
+      display: grid;
+      gap: clamp(8px, 1.1vh, 12px);
+      font-size: clamp(15px, 1.28vw, 19px);
+      line-height: 1.25;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .cover-meta-row {
+      display: flex;
+      justify-content: center;
+      gap: clamp(14px, 1.8vw, 28px);
+      flex-wrap: wrap;
+    }
+
+    /* === P02 Speaker === */
+    .speaker-shell {
+      width: min(75vw, 1010px);
+      gap: clamp(12px, 1.8vh, 22px);
+      text-align: center;
+    }
+    .speaker-name {
+      font-family: var(--font-display);
+      font-size: clamp(62px, 7vw, 106px);
+      line-height: 0.98;
+      font-weight: 950;
+    }
+    .speaker-role {
+      width: min(66vw, 850px);
+      font-size: clamp(25px, 2.8vw, 42px);
+      line-height: 1.18;
+      font-weight: 900;
+      border-top: 2px solid var(--ink);
+      border-bottom: 1px solid var(--soft);
+      padding: clamp(13px, 1.8vh, 20px) clamp(18px, 2vw, 28px);
+    }
+    .proof-list {
+      width: min(64vw, 820px);
+      display: grid;
+      gap: clamp(9px, 1.15vh, 14px);
+      margin-top: clamp(2px, 0.5vh, 8px);
+    }
+    .proof-list p {
+      font-size: clamp(19px, 1.85vw, 28px);
+      line-height: 1.24;
+      font-weight: 760;
+    }
+
+    /* === P03 Core Questions === */
+    .question-shell { gap: clamp(14px, 2vh, 24px); }
+    .question-list {
+      width: min(72vw, 960px);
+      display: grid;
+      gap: clamp(11px, 1.45vh, 16px);
+      border-top: 2px solid var(--ink);
+      border-bottom: 2px solid var(--ink);
+      padding: clamp(20px, 2.8vh, 30px) 0;
+    }
+    .question-row {
+      display: grid;
+      grid-template-columns: clamp(58px, 5.2vw, 76px) 1fr;
+      align-items: center;
+      gap: clamp(18px, 2vw, 28px);
+      padding: clamp(4px, 0.8vh, 8px) clamp(12px, 1.3vw, 18px);
+    }
+    .question-no {
+      font-family: var(--font-logo);
+      font-size: clamp(31px, 3.6vw, 52px);
+      line-height: 0.95;
+      font-weight: 900;
+    }
+    .question-copy {
+      font-size: clamp(23px, 2.3vw, 34px);
+      line-height: 1.2;
+      font-weight: 850;
+    }
+
+    /* === P04 Transition === */
+    .transition-shell {
+      width: min(78vw, 1120px);
+      text-align: center;
+      gap: clamp(18px, 2.6vh, 32px);
+    }
+    .transition-title {
+      font-family: var(--font-display);
+      font-size: clamp(64px, 7.2vw, 110px);
+      line-height: 0.96;
+      font-weight: 950;
+    }
+    .transition-subtitle {
+      font-size: clamp(31px, 3.25vw, 48px);
+      line-height: 1.15;
+      font-weight: 900;
+      border-top: 2px solid var(--ink);
+      border-bottom: 1px solid var(--soft);
+      padding: clamp(13px, 1.8vh, 20px) clamp(22px, 2.2vw, 34px);
+    }
+    .flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: clamp(10px, 1.2vw, 16px);
+      max-width: 1040px;
+    }
+    .flow span {
+      font-size: clamp(17px, 1.55vw, 23px);
+      line-height: 1.1;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+    .flow i {
+      width: clamp(28px, 3vw, 44px);
+      height: 2px;
+      background: var(--ink);
+      display: block;
+      opacity: 0.72;
+    }
+
+    /* === P05 Chain === */
+    .chain-shell {
+      width: min(80vw, 1120px);
+      gap: clamp(12px, 1.6vh, 20px);
+    }
+    .chain-map {
+      width: min(76vw, 1030px);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: stretch;
+      gap: clamp(10px, 1.35vw, 18px);
+      margin-top: clamp(12px, 1.8vh, 20px);
+    }
+    .chain-node {
+      border-top: 2px solid var(--ink);
+      border-bottom: 1px solid var(--soft);
+      padding: clamp(14px, 1.8vh, 21px) clamp(14px, 1.6vw, 22px);
+      display: grid;
+      align-content: center;
+      min-height: clamp(110px, 14vh, 136px);
+    }
+    .chain-node h3 {
+      font-size: clamp(22px, 2.2vw, 32px);
+      line-height: 1.14;
+      font-weight: 950;
+      text-align: center;
+    }
+    .chain-node p {
+      margin-top: clamp(8px, 1vh, 12px);
+      font-size: clamp(13px, 1.1vw, 16px);
+      line-height: 1.42;
+      color: var(--muted);
+      font-weight: 650;
+      text-align: center;
+    }
+    .chain-arrow {
+      display: grid;
+      place-items: center;
+      font-size: clamp(28px, 3vw, 44px);
+      font-weight: 900;
+    }
+    .body-lines {
+      width: min(72vw, 930px);
+      display: grid;
+      gap: clamp(8px, 1vh, 12px);
+      margin-top: clamp(10px, 1.6vh, 18px);
+    }
+    .body-lines p {
+      font-size: clamp(16px, 1.35vw, 20px);
+      line-height: 1.48;
+      font-weight: 670;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    /* === P06 Entry === */
+    .entry-shell {
+      width: min(80vw, 1120px);
+      gap: clamp(12px, 1.7vh, 22px);
+    }
+    .entry-definition {
+      width: min(74vw, 980px);
+      text-align: center;
+      border-top: 2px solid var(--ink);
+      border-bottom: 1px solid var(--soft);
+      padding: clamp(18px, 2.6vh, 30px) clamp(20px, 2.4vw, 36px);
+    }
+    .entry-definition p {
+      font-size: clamp(23px, 2.35vw, 35px);
+      line-height: 1.22;
+      font-weight: 900;
+    }
+    .entry-actions {
+      width: min(76vw, 1040px);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(12px, 1.6vw, 20px);
+    }
+    .entry-action {
+      border-top: 1px solid var(--ink);
+      padding-top: clamp(12px, 1.4vh, 16px);
+      display: grid;
+      gap: clamp(7px, 0.8vh, 10px);
+    }
+    .entry-action h3 {
+      font-size: clamp(24px, 2.4vw, 35px);
+      line-height: 1.05;
+      font-weight: 950;
+    }
+    .entry-action p {
+      font-size: clamp(13px, 1.1vw, 16px);
+      line-height: 1.36;
+      color: var(--muted);
+      font-weight: 680;
+    }
+    .url-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: clamp(12px, 1.4vw, 20px);
+      margin-top: clamp(4px, 0.8vh, 10px);
+      font-family: var(--font-logo);
+      font-weight: 850;
+      font-size: clamp(15px, 1.25vw, 19px);
+    }
+
+    /* === P07 Cases === */
+    .case-shell {
+      width: min(82vw, 1160px);
+      gap: clamp(10px, 1.3vh, 16px);
+    }
+    .case-grid {
+      width: min(80vw, 1120px);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(12px, 1.55vw, 20px);
+      margin-top: clamp(12px, 1.7vh, 18px);
+    }
+    .case-card {
+      border-top: 2px solid var(--ink);
+      border-bottom: 1px solid var(--soft);
+      padding: clamp(14px, 1.8vh, 20px) clamp(12px, 1.4vw, 18px);
+      min-height: clamp(230px, 29vh, 276px);
+      display: grid;
+      align-content: start;
+      gap: clamp(8px, 1vh, 12px);
+    }
+    .case-card h3 {
+      font-family: var(--font-logo);
+      font-size: clamp(17px, 1.55vw, 23px);
+      line-height: 1.08;
+      font-weight: 900;
+      word-break: break-word;
+    }
+    .case-card .label {
+      font-size: clamp(20px, 2vw, 29px);
+      line-height: 1.05;
+      font-weight: 950;
+    }
+    .case-card p {
+      font-size: clamp(12px, 1vw, 15px);
+      line-height: 1.46;
+      color: var(--muted);
+      font-weight: 650;
+    }
+    .case-note {
+      font-size: clamp(14px, 1.15vw, 17px);
+      line-height: 1.3;
+      font-weight: 760;
+      color: var(--ink);
+      text-align: center;
+      margin-top: clamp(2px, 0.8vh, 8px);
+    }
+
+    /* === P08 Data Support === */
+    .data-shell {
+      width: min(80vw, 1120px);
+      gap: clamp(12px, 1.6vh, 20px);
+    }
+    .data-core {
+      width: min(76vw, 1040px);
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr 1.1fr;
+      align-items: center;
+      gap: clamp(18px, 2.4vw, 34px);
+      margin-top: clamp(12px, 1.6vh, 18px);
+      border-top: 2px solid var(--ink);
+      border-bottom: 2px solid var(--ink);
+      padding: clamp(18px, 2.6vh, 30px) 0;
+    }
+    .data-block {
+      display: grid;
+      gap: clamp(9px, 1.1vh, 13px);
+      text-align: center;
+    }
+    .data-block h3 {
+      font-size: clamp(24px, 2.4vw, 35px);
+      line-height: 1.08;
+      font-weight: 950;
+    }
+    .data-block p {
+      font-size: clamp(14px, 1.15vw, 17px);
+      line-height: 1.42;
+      color: var(--muted);
+      font-weight: 680;
+    }
+    .data-number {
+      display: grid;
+      justify-items: center;
+      gap: clamp(4px, 0.6vh, 8px);
+      border-left: 1px solid var(--soft);
+      border-right: 1px solid var(--soft);
+      padding: 0 clamp(10px, 1.2vw, 16px);
+    }
+    .data-number strong {
+      font-family: var(--font-display);
+      font-size: clamp(74px, 8.4vw, 124px);
+      line-height: 0.9;
+      font-weight: 950;
+    }
+    .data-number span {
+      font-size: clamp(17px, 1.5vw, 22px);
+      line-height: 1.1;
+      font-weight: 900;
+    }
+    .data-footer {
+      width: min(72vw, 940px);
+      font-size: clamp(17px, 1.45vw, 22px);
+      line-height: 1.38;
+      font-weight: 760;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    /* === P09 Action Path === */
+    .path-shell {
+      width: min(80vw, 1100px);
+      gap: clamp(13px, 1.8vh, 22px);
+    }
+    .path-steps {
+      width: min(76vw, 1040px);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(12px, 1.6vw, 20px);
+      border-top: 2px solid var(--ink);
+      border-bottom: 2px solid var(--ink);
+      padding: clamp(20px, 2.8vh, 32px) 0;
+      margin-top: clamp(8px, 1vh, 12px);
+    }
+    .path-step {
+      display: grid;
+      gap: clamp(8px, 1vh, 12px);
+      padding: 0 clamp(12px, 1.4vw, 18px);
+      border-right: 1px solid var(--soft);
+    }
+    .path-step:last-child { border-right: 0; }
+    .path-step .num {
+      font-family: var(--font-logo);
+      font-size: clamp(32px, 3.4vw, 50px);
+      line-height: 0.9;
+      font-weight: 900;
+    }
+    .path-step h3 {
+      font-size: clamp(30px, 3vw, 44px);
+      line-height: 1;
+      font-weight: 950;
+    }
+    .path-step p {
+      font-size: clamp(14px, 1.15vw, 17px);
+      line-height: 1.42;
+      color: var(--muted);
+      font-weight: 680;
+    }
+
+    /* === P06-P09 Material Evidence Pages === */
+    .material-slide .slide-content {
+      display: block;
+      padding: 0;
+    }
+    .material-slide .brand-corner {
+      right: calc(-1 * clamp(136px, 12vw, 188px));
+      bottom: calc(-1 * clamp(148px, 13vw, 200px));
+    }
+    .material-slide .dots.bottom-left {
+      width: clamp(210px, 25vw, 360px);
+      opacity: 0.62;
+    }
+    .material-header {
+      position: absolute;
+      left: clamp(92px, 7.7vw, 126px);
+      top: clamp(92px, 11.8vh, 116px);
+      width: min(78vw, 1180px);
+      z-index: 3;
+    }
+    .material-kicker {
+      font-family: var(--font-logo);
+      font-size: clamp(12px, 0.95vw, 15px);
+      line-height: 1.1;
+      font-weight: 900;
+      color: rgba(17, 17, 17, 0.62);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .material-title {
+      margin-top: clamp(10px, 1.25vh, 14px);
+      font-family: var(--font-display);
+      font-size: clamp(32px, 3.65vw, 54px);
+      line-height: 1.04;
+      font-weight: 950;
+      letter-spacing: 0;
+      max-width: 1120px;
+    }
+    .material-subtitle {
+      margin-top: clamp(7px, 0.9vh, 11px);
+      font-size: clamp(16px, 1.28vw, 21px);
+      line-height: 1.35;
+      font-weight: 820;
+      color: var(--muted);
+      max-width: 980px;
+    }
+    .material-rule {
+      margin-top: clamp(18px, 2.2vh, 26px);
+      width: min(73vw, 1040px);
+      height: 2px;
+      background: var(--ink);
+    }
+    .material-stage {
+      position: absolute;
+      left: clamp(92px, 7.7vw, 126px);
+      right: clamp(92px, 7.7vw, 126px);
+      top: clamp(246px, 30.2vh, 284px);
+      bottom: clamp(96px, 11.4vh, 118px);
+      z-index: 3;
+      display: grid;
+      gap: clamp(22px, 2vw, 34px);
+    }
+    .material-panel,
+    .material-screen {
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(17, 17, 17, 0.16);
+      border-radius: clamp(12px, 1.25vw, 18px);
+      box-shadow: 0 24px 70px rgba(16, 24, 40, 0.12);
+      overflow: hidden;
+    }
+    .material-screen img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      max-height: none;
+    }
+    .material-screen.contain img {
+      object-fit: contain;
+      background: #fff;
+    }
+    .material-screen.browser::before {
+      content: "";
+      display: block;
+      height: clamp(24px, 2.7vh, 30px);
+      background:
+        radial-gradient(circle at 17px 50%, #ff5f56 0 4px, transparent 5px),
+        radial-gradient(circle at 35px 50%, #ffbd2e 0 4px, transparent 5px),
+        radial-gradient(circle at 53px 50%, #27c93f 0 4px, transparent 5px),
+        #f7f8fa;
+      border-bottom: 1px solid rgba(17, 17, 17, 0.09);
+    }
+    .material-screen.browser img {
+      height: calc(100% - clamp(24px, 2.7vh, 30px));
+    }
+    .material-micro {
+      font-family: var(--font-logo);
+      font-size: clamp(11px, 0.82vw, 13px);
+      font-weight: 900;
+      color: rgba(17, 17, 17, 0.62);
+      letter-spacing: 0.05em;
+    }
+
+    .material-06 .material-stage {
+      grid-template-columns: 1.23fr 0.77fr;
+      align-items: stretch;
+    }
+    .material-06 .home-shot img { object-position: 32% center; }
+    .material-06 .side-stack {
+      display: grid;
+      grid-template-rows: 0.92fr 1.08fr;
+      gap: clamp(18px, 1.8vh, 24px);
+    }
+    .material-06 .value-panel {
+      padding: clamp(22px, 2.6vh, 32px) clamp(22px, 1.9vw, 30px);
+      display: grid;
+      align-content: center;
+    }
+    .material-06 .value-panel h3 {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 2.65vw, 42px);
+      line-height: 1.08;
+      font-weight: 950;
+    }
+    .material-06 .value-row {
+      display: grid;
+      grid-template-columns: clamp(72px, 6vw, 94px) 1fr;
+      gap: clamp(14px, 1.1vw, 18px);
+      align-items: center;
+      min-height: clamp(48px, 6vh, 64px);
+      border-top: 1px solid rgba(17, 17, 17, 0.12);
+    }
+    .material-06 .value-row:first-of-type { margin-top: clamp(16px, 2vh, 24px); }
+    .material-06 .value-row strong {
+      font-size: clamp(18px, 1.55vw, 24px);
+      line-height: 1;
+      font-weight: 950;
+    }
+    .material-06 .value-row span {
+      color: var(--muted);
+      font-size: clamp(13px, 1vw, 16px);
+      line-height: 1.35;
+      font-weight: 760;
+    }
+
+    .material-07 .material-stage {
+      grid-template-columns: 0.9fr 1.1fr;
+      align-items: stretch;
+    }
+    .skill-cases-v2 {
+      display: grid;
+      gap: clamp(12px, 1.35vh, 18px);
+    }
+    .skill-card-v2 {
+      position: relative;
+      padding: clamp(16px, 1.9vh, 24px) clamp(18px, 1.65vw, 26px) clamp(14px, 1.7vh, 20px);
+      min-height: clamp(126px, 15.4vh, 154px);
+      display: grid;
+      align-content: center;
+    }
+    .skill-card-v2::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: clamp(5px, 0.45vw, 7px);
+      background: var(--case-accent, var(--accent));
+    }
+    .skill-card-v2 h3 {
+      margin-top: clamp(5px, 0.55vh, 8px);
+      font-family: var(--font-display);
+      font-size: clamp(22px, 2vw, 32px);
+      line-height: 1.08;
+      font-weight: 950;
+    }
+    .skill-card-v2 p {
+      margin-top: clamp(5px, 0.65vh, 8px);
+      font-size: clamp(12px, 0.92vw, 15px);
+      line-height: 1.42;
+      color: var(--muted);
+      font-weight: 760;
+    }
+    .skill-tags-v2 {
+      display: flex;
+      flex-wrap: wrap;
+      gap: clamp(6px, 0.55vw, 9px);
+      margin-top: clamp(9px, 1vh, 12px);
+    }
+    .skill-tags-v2 span {
+      border-radius: 999px;
+      background: rgba(17, 17, 17, 0.07);
+      padding: clamp(4px, 0.5vh, 6px) clamp(8px, 0.8vw, 12px);
+      font-family: var(--font-logo);
+      font-size: clamp(10px, 0.74vw, 12px);
+      line-height: 1;
+      font-weight: 900;
+      color: rgba(17, 17, 17, 0.64);
+    }
+    .install-strip {
+      margin-top: clamp(9px, 1vh, 12px);
+      border-radius: 8px;
+      background: var(--ink);
+      color: #fff;
+      padding: clamp(7px, 0.8vh, 10px) clamp(10px, 0.9vw, 14px);
+      font-family: var(--font-logo);
+      font-size: clamp(10px, 0.74vw, 12px);
+      line-height: 1.1;
+      font-weight: 900;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .material-08 .material-stage {
+      grid-template-columns: 1.16fr 0.84fr;
+      align-items: stretch;
+    }
+    .data-proof-panel {
+      padding: clamp(34px, 4.2vh, 54px) clamp(28px, 2.5vw, 40px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .data-proof-panel .big-number {
+      margin-top: clamp(10px, 1.3vh, 16px);
+      font-family: var(--font-display);
+      font-size: clamp(84px, 8vw, 126px);
+      line-height: 0.88;
+      font-weight: 950;
+    }
+    .data-proof-panel h3 {
+      margin-top: clamp(14px, 1.7vh, 22px);
+      font-family: var(--font-display);
+      font-size: clamp(28px, 2.65vw, 42px);
+      line-height: 1.13;
+      font-weight: 950;
+    }
+    .proof-items {
+      margin-top: clamp(20px, 2.3vh, 30px);
+      display: grid;
+      gap: clamp(10px, 1.2vh, 14px);
+    }
+    .proof-item-v2 {
+      border: 1px solid rgba(17, 17, 17, 0.12);
+      border-radius: 12px;
+      background: rgba(17, 17, 17, 0.035);
+      padding: clamp(12px, 1.35vh, 16px) clamp(14px, 1.2vw, 18px);
+    }
+    .proof-item-v2 strong {
+      display: block;
+      font-size: clamp(15px, 1.16vw, 18px);
+      line-height: 1.15;
+      font-weight: 950;
+    }
+    .proof-item-v2 span {
+      display: block;
+      margin-top: clamp(4px, 0.5vh, 6px);
+      font-size: clamp(11px, 0.86vw, 14px);
+      line-height: 1.35;
+      color: var(--muted);
+      font-weight: 720;
+    }
+
+    .material-09 .material-stage {
+      grid-template-columns: 1fr 0.9fr;
+      align-items: stretch;
+    }
+    .action-stack-v2 {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: clamp(14px, 1.5vh, 20px);
+    }
+    .qr-panel-v2 {
+      display: grid;
+      grid-template-columns: clamp(88px, 8.2vw, 118px) 1fr;
+      gap: clamp(18px, 1.5vw, 24px);
+      align-items: center;
+      padding: clamp(18px, 2.2vh, 26px) clamp(20px, 1.8vw, 28px);
+    }
+    .qr-placeholder {
+      aspect-ratio: 1;
+      background: #fff;
+      border: 8px solid #fff;
+      box-shadow: inset 0 0 0 2px rgba(17, 17, 17, 0.12);
+    }
+    .qr-panel-v2 h3 {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 2.45vw, 38px);
+      line-height: 1.08;
+      font-weight: 950;
+    }
+    .qr-panel-v2 p {
+      margin-top: clamp(8px, 0.9vh, 12px);
+      font-size: clamp(13px, 1vw, 16px);
+      line-height: 1.45;
+      color: var(--muted);
+      font-weight: 760;
+    }
+    .action-cards-v2 {
+      display: grid;
+      gap: clamp(12px, 1.35vh, 18px);
+    }
+    .action-card-v2 {
+      padding: clamp(18px, 2.1vh, 26px) clamp(20px, 1.8vw, 28px);
+      display: grid;
+      align-content: center;
+    }
+    .action-card-v2 h3 {
+      font-size: clamp(24px, 2vw, 32px);
+      line-height: 1.08;
+      font-weight: 950;
+    }
+    .action-card-v2 p {
+      margin-top: clamp(7px, 0.85vh, 10px);
+      font-size: clamp(13px, 0.95vw, 15px);
+      line-height: 1.42;
+      color: var(--muted);
+      font-weight: 740;
+    }
+
+    /* === P10 QA === */
+    .qa-shell {
+      width: min(78vw, 1080px);
+      gap: clamp(12px, 1.6vh, 20px);
+    }
+    .qa-title {
+      font-family: var(--font-display);
+      font-size: clamp(86px, 10vw, 150px);
+      line-height: 0.82;
+      font-weight: 950;
+    }
+    .qa-list {
+      width: min(72vw, 940px);
+      display: grid;
+      gap: clamp(8px, 1vh, 12px);
+      border-top: 2px solid var(--ink);
+      border-bottom: 1px solid var(--soft);
+      padding: clamp(18px, 2.2vh, 26px) 0;
+    }
+    .qa-list p {
+      font-size: clamp(18px, 1.65vw, 24px);
+      line-height: 1.26;
+      font-weight: 780;
+      text-align: center;
+    }
+    .qa-intro {
+      font-size: clamp(17px, 1.45vw, 22px);
+      line-height: 1.2;
+      font-weight: 850;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: clamp(2px, 0.7vh, 8px);
+    }
+
+    /* === P11 Next Actions === */
+    .next-shell {
+      width: min(80vw, 1100px);
+      gap: clamp(14px, 1.8vh, 24px);
+    }
+    .next-list {
+      width: min(72vw, 960px);
+      display: grid;
+      gap: clamp(12px, 1.55vh, 18px);
+      border-top: 2px solid var(--ink);
+      border-bottom: 2px solid var(--ink);
+      padding: clamp(20px, 2.8vh, 32px) 0;
+    }
+    .next-row {
+      display: grid;
+      grid-template-columns: clamp(116px, 11vw, 156px) 1fr;
+      gap: clamp(18px, 2.4vw, 34px);
+      align-items: start;
+      padding: 0 clamp(12px, 1.4vw, 18px);
+    }
+    .next-row h3 {
+      font-size: clamp(25px, 2.5vw, 37px);
+      line-height: 1;
+      font-weight: 950;
+    }
+    .next-row p {
+      font-size: clamp(17px, 1.45vw, 22px);
+      line-height: 1.34;
+      font-weight: 710;
+      color: var(--muted);
+    }
+
+    /* === P12 Thanks === */
+    .thanks-shell {
+      width: min(76vw, 1060px);
+      text-align: center;
+      gap: clamp(12px, 1.8vh, 22px);
+    }
+    .thanks-title {
+      font-family: var(--font-display);
+      font-size: clamp(68px, 7.8vw, 118px);
+      line-height: 0.98;
+      font-weight: 950;
+    }
+    .thanks-subtitle {
+      font-size: clamp(27px, 2.8vw, 42px);
+      line-height: 1.16;
+      font-weight: 900;
+      border-top: 2px solid var(--ink);
+      border-bottom: 1px solid var(--soft);
+      padding: clamp(12px, 1.6vh, 18px) clamp(20px, 2.2vw, 32px);
+    }
+    .thanks-copy {
+      display: grid;
+      gap: clamp(8px, 1vh, 12px);
+      font-size: clamp(20px, 1.9vw, 28px);
+      line-height: 1.25;
+      font-weight: 760;
+      color: var(--muted);
+    }
+
+    /* === Navigation Chrome === */
+    .slide-counter {
+      position: fixed;
+      right: 18px;
+      bottom: 16px;
+      z-index: 20;
+      padding: 7px 10px;
+      border-radius: 5px;
+      background: rgba(0, 0, 0, 0.62);
+      color: #fff;
+      font: 12px/1 var(--font-body);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    body:hover .slide-counter { opacity: 1; }
+
+    /* === Responsive Safeguards === */
+    @media (max-height: 700px) {
+      :root {
+        --slide-padding: clamp(32px, 5vw, 70px);
+        --title: clamp(44px, 5.7vw, 74px);
+        --h1: clamp(36px, 4.3vw, 62px);
+        --h2: clamp(25px, 2.9vw, 40px);
+        --body: clamp(14px, 1.18vw, 18px);
+      }
+      .shell, .cover-core { transform: translateY(10px); }
+      .brand-corner {
+        width: clamp(230px, 21vw, 310px);
+        height: clamp(230px, 21vw, 310px);
+      }
+      .case-card { min-height: 210px; }
+      .qa-title { font-size: clamp(72px, 8.8vw, 128px); }
+    }
+    @media (max-width: 980px) {
+      .cover-title { font-size: clamp(42px, 8vw, 70px); }
+      .page-title { font-size: clamp(34px, 7vw, 60px); }
+      .question-row,
+      .next-row { grid-template-columns: 1fr; gap: 8px; text-align: center; }
+      .chain-map,
+      .entry-actions,
+      .case-grid,
+      .data-core,
+      .path-steps { grid-template-columns: 1fr; }
+      .chain-arrow { transform: rotate(90deg); }
+      .path-step,
+      .data-number { border-right: 0; border-left: 0; }
+      .speaker-role, .proof-list { width: min(84vw, 760px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="slide-counter" id="counter">1 / 12</div>
+  <div class="deck" id="deck">
+    <div class="slide cover active" data-slide="0" data-title="封面">
+      <img class="master-logo" src="assets/pandaai-trade-logo-horizontal-black.svg" alt="PandaAI Trade">
+      <div class="dots top-right" aria-hidden="true"></div>
+      <div class="dots bottom-left" aria-hidden="true"></div>
+      <div class="brand-corner" aria-hidden="true"><div class="brand-lockup"><img src="assets/pandaai-mark-white.svg" alt=""><span>PandaAI Trade</span></div></div>
+      <div class="slide-content">
+        <div class="cover-core">
+          <h1 class="cover-title"><span>一个人也能拥有</span><span>AI 量化研究团队？</span></h1>
+          <p class="cover-subtitle">Quant Agent 全流程实战</p>
+          <div class="cover-meta">
+            <p>PandaAI 社区直播第 9 期</p>
+            <p class="cover-meta-row"><span>主持人：佳宁</span><span>分享嘉宾：乌克兰剑圣</span></p>
+            <p>6 月 25 日 20:00</p>
+          </div>
+        </div>
+      </div>
+      <script type="application/json" class="slide-notes">
+      {"title":"封面","script":"本场直播聚焦 Quant Agent 全流程实战，讨论一个人如何借助 AI 组织量化研究工作流。","notes":["主题是 Quant Agent 全流程实战","PandaAI 社区直播第 9 期","主持人佳宁，分享嘉宾乌克兰剑圣"]}
+      </script>
+    </div>
+
+    <div class="slide body-slide" data-slide="1" data-title="嘉宾介绍">
+      <img class="master-logo" src="assets/pandaai-trade-logo-horizontal-black.svg" alt="PandaAI Trade">
+      <div class="dots top-right" aria-hidden="true"></div><div class="dots bottom-left" aria-hidden="true"></div>
+      <div class="brand-corner" aria-hidden="true"><div class="brand-lockup"><img src="assets/pandaai-mark-white.svg" alt=""><span>PandaAI Trade</span></div></div>
+      <div class="slide-number">P02</div>
+      <div class="slide-content">
+        <section class="shell speaker-shell">
+          <p class="kicker">AI Quant Agent 与量化研究工作流实践者</p>
+          <h2 class="speaker-name">乌克兰剑圣（慕总）</h2>
+          <p class="speaker-role">10+ 年量化实盘与程序化交易经验</p>
+          <div class="proof-list">
+            <p>QuantSkills.ai 发起人｜松鼠Quant主编</p>
+            <p>专注 AI Quant Agent 与量化研究工作流实践</p>
+          </div>
+        </section>
+      </div>
+      <script type="application/json" class="slide-notes">
+      {"title":"嘉宾介绍","script":"乌克兰剑圣，也就是慕总，是 AI Quant Agent 与量化研究工作流实践者。","notes":["10+ 年量化实盘与程序化交易经验","QuantSkills.ai 发起人，松鼠Quant主编","专注 AI Quant Agent 与量化研究工作流实践"]}
+      </script>
+    </div>
+
+    <div class="slide body-slide" data-slide="2" data-title="本场收获">
+      <img class="master-logo" src="assets/pandaai-trade-logo-horizontal-black.svg" alt="PandaAI Trade">
+      <div class="dots top-right" aria-hidden="true"></div><div class="dots bottom-left" aria-hidden="true"></div>
+      <div class="brand-corner" aria-hidden="true"><div class="brand-lockup"><img src="assets/pandaai-mark-white.svg" alt=""><span>PandaAI Trade</span></div></div>
+      <div class="slide-number">P03</div>
+      <div class="slide-content">
+        <section class="shell question-shell">
+          <h2 class="page-title">本场分享的四个核心问题</h2>
+          <p class="page-subtitle">从能力边界，到完整流程，再到 Agent 跑不出结果的原因</p>
+          <div class="question-list">
+            <article class="question-row"><div class="question-no">01</div><p class="question-copy">AI 能替研究员完成哪些工作？</p></article>
+            <article class="question-row"><div class="question-no">02</div><p class="question-copy">如何把一篇研报变成可验证策略？</p></article>
+            <article class="question-row"><div class="question-no">03</div><p class="question-copy">5 个 Skills 跑通 Quant Agent 全流程</p></article>
+            <article class="question-row"><div class="question-no">04</div><p class="question-copy">为什么很多 Agent 最终跑不出结果？</p></article>
+          </div>
+        </section>
+      </div>
+      <script type="application/json" class="slide-notes">
+      {"title":"本场收获","script":"这场分享围绕四个核心问题展开，从能力边界到完整流程，再到 Agent 跑不出结果的原因。","notes":["AI 能替研究员完成哪些工作","如何把研报变成可验证策略","5 个 Skills 跑通 Quant Agent 全流程","为什么很多 Agent 最终跑不出结果"]}
+      </script>
+    </div>
+
+    <div class="slide body-slide" data-slide="3" data-title="嘉宾分享转场">
+      <img class="master-logo" src="assets/pandaai-trade-logo-horizontal-black.svg" alt="PandaAI Trade">
+      <div class="dots top-right" aria-hidden="true"></div><div class="dots bottom-left" aria-hidden="true"></div>
+      <div class="brand-corner" aria-hidden="true"><div class="brand-lockup"><img src="assets/pandaai-mark-white.svg" alt=""><span>PandaAI Trade</span></div></div>
+      <div class="slide-number">P04</div>
+      <div class="slide-content">
+        <section class="shell transition-shell">
+          <h2 class="transition-title">乌克兰剑圣分享</h2>
+          <p class="transition-subtitle">5 个 Skills 跑通 Quant Agent</p>
+          <div class="flow" aria-label="流程">
+            <span>读研报</span><i></i><span>拆因子</span><i></i><span>做验证</span><i></i><span>复现策略</span><i></i><span>生成报告</span>
+          </div>
+        </section>
+      </div>
+      <script type="application/json" class="slide-notes">
+      {"title":"嘉宾分享转场","script":"接下来进入乌克兰剑圣的分享，用 5 个 Skills 跑通 Quant Agent 的研究流程。","notes":["主题是 5 个 Skills 跑通 Quant Agent","流程包括读研报、拆因子、做验证、复现策略、生成报告"]}
+      </script>
+    </div>
+
+    <div class="slide body-slide" data-slide="4" data-title="主持人接回">
+      <img class="master-logo" src="assets/pandaai-trade-logo-horizontal-black.svg" alt="PandaAI Trade">
+      <div class="dots top-right" aria-hidden="true"></div><div class="dots bottom-left" aria-hidden="true"></div>
+      <div class="brand-corner" aria-hidden="true"><div class="brand-lockup"><img src="assets/pandaai-mark-white.svg" alt=""><span>PandaAI Trade</span></div></div>
+      <div class="slide-number">P05</div>
+      <div class="slide-content">
+        <section class="shell chain-shell">
+          <h2 class="page-title">Skill 化研究链路：从研报到报告</h2>
+          <p class="page-subtitle">读研报、拆因子、做验证、复现策略、生成报告</p>
+          <div class="chain-map">
+            <article class="chain-node"><h3>分散环节</h3><p>工具、脚本、数据接口和个人经验各自分散</p></article>
+            <div class="chain-arrow">→</div>
+            <article class="chain-node"><h3>Skills 串联</h3><p>组织成更清楚、可调用、可复用的研究动作</p></article>
+            <div class="chain-arrow">→</div>
+            <article class="chain-node"><h3>Quant Agent 工作流</h3><p>从研报理解一路推进到报告生成</p></article>
+          </div>
+          <div class="body-lines">
+            <p>这些环节过去分散在工具、脚本、数据接口和个人经验里。</p>
+            <p>通过 Skills，它们可以被组织成更清楚、可调用、可复用的研究动作。</p>
+            <p>欢迎在评论区留下问题，稍后进入 QA 环节。</p>
+          </div>
+        </section>
+      </div>
+      <script type="application/json" class="slide-notes">
+      {"title":"Skill 化研究链路","script":"读研报、拆因子、做验证、复现策略和生成报告，过去往往分散在不同工具和个人经验里。通过 Skills，这些动作可以被组织成可调用、可复用的研究链路。","notes":["研究环节过去分散在工具、脚本、数据接口和个人经验里","Skills 将研究动作组织得更清楚、可调用、可复用","评论区问题稍后进入 QA 环节"]}
+      </script>
+    </div>
+
+    <div class="slide body-slide material-slide material-06" data-slide="5" data-title="QuantSkills.ai">
+      <img class="master-logo" src="assets/pandaai-trade-logo-horizontal-black.svg" alt="PandaAI Trade">
+      <div class="dots top-right" aria-hidden="true"></div><div class="dots bottom-left" aria-hidden="true"></div>
+      <div class="brand-corner" aria-hidden="true"><div class="brand-lockup"><img src="assets/pandaai-mark-white.svg" alt=""><span>PandaAI Trade</span></div></div>
+      <div class="slide-number">P06</div>
+      <div class="slide-content">
+        <header class="material-header">
+          <p class="material-kicker">QUANTSKILLS.AI / OPEN SKILLS ENTRY</p>
+          <h2 class="material-title">QuantSkills.ai：本场 Skills 的开源承接入口</h2>
+          <p class="material-subtitle">从直播内容进入真实可领取、可查看、可共创的量化 Skill 社区。</p>
+          <div class="material-rule"></div>
+        </header>
+        <main class="material-stage">
+          <figure class="material-screen browser home-shot"><img src="assets/quantskills-home.png" alt="QuantSkills 首页截图"></figure>
+          <div class="side-stack">
+            <figure class="material-screen contain"><img src="assets/quantskills-skill-map.png" alt="QuantSkills 技能图谱"></figure>
+            <aside class="material-panel value-panel">
+              <h3>不是资料库，是继续上手入口</h3>
+              <div class="value-row"><strong>开源</strong><span>Skill / Agent 公开发布与复用</span></div>
+              <div class="value-row"><strong>导入</strong><span>Git 导入、Zip 上传、一键 Fork</span></div>
+              <div class="value-row"><strong>调用</strong><span>Claude / Codex / Cursor / OpenClaw</span></div>
+            </aside>
+          </div>
+        </main>
+      </div>
+      <script type="application/json" class="slide-notes">
+      {"title":"QuantSkills.ai","script":"QuantSkills.ai 是本场 Skills 的开源承接入口。直播里讲到的研究动作，可以继续在这里查看、领取和共创。","notes":["QuantSkills.ai 是本场 Skills 的开源承接入口","官网首屏和技能图谱共同证明这是可访问的产品入口","观众可以领取、导入，并在 AI 助手里调用相关 Skill"]}
+      </script>
+    </div>
+
+    <div class="slide body-slide material-slide material-07" data-slide="6" data-title="已开源研究动作">
+      <img class="master-logo" src="assets/pandaai-trade-logo-horizontal-black.svg" alt="PandaAI Trade">
+      <div class="dots top-right" aria-hidden="true"></div><div class="dots bottom-left" aria-hidden="true"></div>
+      <div class="brand-corner" aria-hidden="true"><div class="brand-lockup"><img src="assets/pandaai-mark-white.svg" alt=""><span>PandaAI Trade</span></div></div>
+      <div class="slide-number">P07</div>
+      <div class="slide-content">
+        <header class="material-header">
+          <p class="material-kicker">THREE READY-TO-USE SKILLS</p>
+          <h2 class="material-title">三个即装即用的硬核 Skill</h2>
+          <p class="material-subtitle">复盘、尽调、席位分析：从直播内容进入可领取、可安装、可运行的 Skill。</p>
+          <div class="material-rule"></div>
+        </header>
+        <main class="material-stage">
+          <figure class="material-screen browser contain"><img src="assets/quantskills-skills-list.png" alt="QuantSkills 技能列表截图"></figure>
+          <div class="skill-cases-v2">
+            <article class="material-panel skill-card-v2" style="--case-accent:#3a82ff">
+              <p class="material-micro">skill-market-daily-review</p>
+              <h3>收盘后说句“复盘一下”</h3>
+              <p>指数估值、市场宽度、行业热点、龙虎榜、大宗、两融、北向七个板块一次铺齐，数字可溯源。</p>
+              <div class="skill-tags-v2"><span>7 个板块</span><span>收盘后自动跑</span><span>数字可溯源</span></div>
+              <div class="install-strip">cp -r skill-market-daily-review ~/.claude/skills/</div>
+            </article>
+            <article class="material-panel skill-card-v2" style="--case-accent:#0f6f5f">
+              <p class="material-micro">skill-a-share-stock-dossier</p>
+              <h3>输一个股票代码，做一份体检</h3>
+              <p>串联 25+ 个 PandaData 接口，生成九章尽调报告，并用十条风险规则标出红黄绿信号。</p>
+              <div class="skill-tags-v2"><span>25+ 接口</span><span>9 章报告</span><span>10 条风险规则</span></div>
+              <div class="install-strip">cp -r skill-a-share-stock-dossier ~/.claude/skills/</div>
+            </article>
+            <article class="material-panel skill-card-v2" style="--case-accent:#ff6a2a">
+              <p class="material-micro">skill-futures-deepview-analyst</p>
+              <h3>分析螺纹钢主力的席位博弈</h3>
+              <p>覆盖 35 个 DeepView 接口，席位、基差、库存、期限结构一起看，输出事实与推断分离的研判。</p>
+              <div class="skill-tags-v2"><span>35 个接口</span><span>4 种分析模式</span><span>事实/推断分离</span></div>
+              <div class="install-strip">cp -r skill-futures-deepview-analyst ~/.claude/skills/</div>
+            </article>
+          </div>
+        </main>
+      </div>
+      <script type="application/json" class="slide-notes">
+      {"title":"三个 Skill","script":"这里不是泛泛讲能力，而是给出三个可以上手的 Skill：收盘复盘、个股体检和期货 DeepView。","notes":["skill-market-daily-review 对应收盘复盘","skill-a-share-stock-dossier 对应个股体检","skill-futures-deepview-analyst 对应期货 DeepView","三条 Skill 都保留了真实名称、用途和安装路径"]}
+      </script>
+    </div>
+
+    <div class="slide body-slide material-slide material-08" data-slide="7" data-title="数据支撑">
+      <img class="master-logo" src="assets/pandaai-trade-logo-horizontal-black.svg" alt="PandaAI Trade">
+      <div class="dots top-right" aria-hidden="true"></div><div class="dots bottom-left" aria-hidden="true"></div>
+      <div class="brand-corner" aria-hidden="true"><div class="brand-lockup"><img src="assets/pandaai-mark-white.svg" alt=""><span>PandaAI Trade</span></div></div>
+      <div class="slide-number">P08</div>
+      <div class="slide-content">
+        <header class="material-header">
+          <p class="material-kicker">PANDADATA / DATA FOUNDATION</p>
+          <h2 class="material-title">数据调用能力决定 Skill 的研究可用性</h2>
+          <p class="material-subtitle">pandadata-api 是三个 Skill 共用的数据底座：先查文档，再回答。</p>
+          <div class="material-rule"></div>
+        </header>
+        <main class="material-stage">
+          <figure class="material-screen browser"><img src="assets/pandadata-home.png" alt="PandaData 首页截图"></figure>
+          <aside class="material-panel data-proof-panel">
+            <p class="material-micro">PANDADATA-API</p>
+            <div class="big-number">185</div>
+            <h3>个接口打包成 AI 可查询的本地知识库</h3>
+            <div class="proof-items">
+              <div class="proof-item-v2"><strong>先查文档，再回答</strong><span>减少凭记忆编参数、编口径。</span></div>
+              <div class="proof-item-v2"><strong>数据可追溯</strong><span>报告里的数字能回到接口出处和数据口径。</span></div>
+              <div class="proof-item-v2"><strong>支撑复盘 / 尽调 / DeepView</strong><span>让 Agent 在研究流程里更稳定地调用数据。</span></div>
+            </div>
+          </aside>
+        </main>
+      </div>
+      <script type="application/json" class="slide-notes">
+      {"title":"数据支撑","script":"Skill 不只靠提示词。PandaData 和 pandadata-api 提供数据调用能力，让研究报告里的数字能回到接口出处和数据口径。","notes":["pandadata-api 将 185 个 PandaData 接口打包成 AI 可查询的本地知识库","先查文档再回答，减少编参数和编口径","数据可追溯，报告数字能回到接口出处和数据口径","复盘、尽调、DeepView 都需要稳定的数据底座"]}
+      </script>
+    </div>
+
+    <div class="slide body-slide material-slide material-09" data-slide="8" data-title="行动路径">
+      <img class="master-logo" src="assets/pandaai-trade-logo-horizontal-black.svg" alt="PandaAI Trade">
+      <div class="dots top-right" aria-hidden="true"></div><div class="dots bottom-left" aria-hidden="true"></div>
+      <div class="brand-corner" aria-hidden="true"><div class="brand-lockup"><img src="assets/pandaai-mark-white.svg" alt=""><span>PandaAI Trade</span></div></div>
+      <div class="slide-number">P09</div>
+      <div class="slide-content">
+        <header class="material-header">
+          <p class="material-kicker">GET / RUN / CONTRIBUTE</p>
+          <h2 class="material-title">QuantSkills.ai 的三步行动路径</h2>
+          <p class="material-subtitle">官网、仓库与加入入口集中承接，直播后直接进入领取与共创。</p>
+          <div class="material-rule"></div>
+        </header>
+        <main class="material-stage">
+          <figure class="material-screen browser"><img src="assets/quantskills-github.png" alt="QuantSkills GitHub README 截图"></figure>
+          <div class="action-stack-v2">
+            <aside class="material-panel qr-panel-v2">
+              <div class="qr-placeholder" aria-label="社区入口二维码占位"></div>
+              <div>
+                <h3>访问入口</h3>
+                <p>官网：quantskills.ai<br>仓库：github.com/quantskills<br>加入：github.com/quantskills/join</p>
+              </div>
+            </aside>
+            <div class="action-cards-v2">
+              <article class="material-panel action-card-v2"><h3>01｜领取</h3><p>访问 QuantSkills.ai，查看本场相关开源 Skills。</p></article>
+              <article class="material-panel action-card-v2"><h3>02｜上手</h3><p>安装到 AI 助手，用自然语言发起研究任务。</p></article>
+              <article class="material-panel action-card-v2"><h3>03｜共创</h3><p>Fork / Star / 发布自己的策略、因子、研究流程 Skill。</p></article>
+            </div>
+          </div>
+        </main>
+      </div>
+      <script type="application/json" class="slide-notes">
+      {"title":"行动路径","script":"直播后的行动路径分三步：先领取本场相关开源 Skills，再安装到 AI 助手上手使用，最后可以 Fork、Star 或发布自己的研究流程 Skill。","notes":["领取：访问 QuantSkills.ai 查看本场相关开源 Skills","上手：安装到 AI 助手，用自然语言发起研究任务","共创：Fork、Star 或发布自己的研究流程 Skill","二维码后续替换为真实社区入口"]}
+      </script>
+    </div>
+
+    <div class="slide body-slide" data-slide="9" data-title="QA">
+      <img class="master-logo" src="assets/pandaai-trade-logo-horizontal-black.svg" alt="PandaAI Trade">
+      <div class="dots top-right" aria-hidden="true"></div><div class="dots bottom-left" aria-hidden="true"></div>
+      <div class="brand-corner" aria-hidden="true"><div class="brand-lockup"><img src="assets/pandaai-mark-white.svg" alt=""><span>PandaAI Trade</span></div></div>
+      <div class="slide-number">P10</div>
+      <div class="slide-content">
+        <section class="shell qa-shell">
+          <h2 class="qa-title">QA 环节</h2>
+          <p class="page-subtitle">评论区提问</p>
+          <div class="qa-list">
+            <p class="qa-intro">可以围绕这些方向提问：</p>
+            <p>研报如何拆成可验证策略？</p>
+            <p>5 个 Skills 在研究流程里如何分工？</p>
+            <p>Quant Agent 为什么有时候跑不出结果？</p>
+            <p>自己的研究流程如何沉淀成 Skill？</p>
+            <p>QuantSkills.ai / PandaData 后续怎么使用？</p>
+          </div>
+        </section>
+      </div>
+      <script type="application/json" class="slide-notes">
+      {"title":"QA 环节","script":"QA 环节可以围绕研报拆解、Skills 分工、Quant Agent 跑不出结果的原因、研究流程沉淀，以及 QuantSkills.ai 和 PandaData 的后续使用来提问。","notes":["研报如何拆成可验证策略","5 个 Skills 在研究流程里如何分工","Quant Agent 为什么有时候跑不出结果","研究流程如何沉淀成 Skill","QuantSkills.ai 和 PandaData 后续怎么使用"]}
+      </script>
+    </div>
+
+    <div class="slide body-slide" data-slide="10" data-title="下一步行动路线图">
+      <img class="master-logo" src="assets/pandaai-trade-logo-horizontal-black.svg" alt="PandaAI Trade">
+      <div class="dots top-right" aria-hidden="true"></div><div class="dots bottom-left" aria-hidden="true"></div>
+      <div class="brand-corner" aria-hidden="true"><div class="brand-lockup"><img src="assets/pandaai-mark-white.svg" alt=""><span>PandaAI Trade</span></div></div>
+      <div class="slide-number">P11</div>
+      <div class="slide-content">
+        <section class="shell next-shell">
+          <h2 class="page-title">直播后的持续承接：Skills 领取与社区共创</h2>
+          <p class="page-subtitle">Skills 领取、后续活动与社群通知</p>
+          <div class="next-list">
+            <article class="next-row"><h3>继续上手</h3><p>到 QuantSkills.ai 领取本场相关开源 Skills</p></article>
+            <article class="next-row"><h3>持续关注</h3><p>关注 PandaAI 社区后续直播、活动与共创信息</p></article>
+            <article class="next-row"><h3>信息同步</h3><p>回放、资料与后续社群信息，以社区通知为准</p></article>
+          </div>
+        </section>
+      </div>
+      <script type="application/json" class="slide-notes">
+      {"title":"下一步行动路线图","script":"直播后的持续承接主要是三件事：继续到 QuantSkills.ai 领取和上手，持续关注 PandaAI 社区后续活动，并以后续社区通知为准同步回放和资料信息。","notes":["继续上手：到 QuantSkills.ai 领取本场相关开源 Skills","持续关注：关注 PandaAI 社区后续直播、活动与共创信息","信息同步：回放、资料与后续社群信息以社区通知为准"]}
+      </script>
+    </div>
+
+    <div class="slide body-slide" data-slide="11" data-title="感谢页">
+      <img class="master-logo" src="assets/pandaai-trade-logo-horizontal-black.svg" alt="PandaAI Trade">
+      <div class="dots top-right" aria-hidden="true"></div><div class="dots bottom-left" aria-hidden="true"></div>
+      <div class="brand-corner" aria-hidden="true"><div class="brand-lockup"><img src="assets/pandaai-mark-white.svg" alt=""><span>PandaAI Trade</span></div></div>
+      <div class="slide-number">P12</div>
+      <div class="slide-content">
+        <section class="shell thanks-shell">
+          <h2 class="thanks-title">感谢大家的参与</h2>
+          <p class="thanks-subtitle">你们的反馈，是我们前进的动力</p>
+          <div class="thanks-copy">
+            <p>再次感谢慕总</p>
+            <p>也感谢屏幕前每一位朋友</p>
+          </div>
+        </section>
+      </div>
+      <script type="application/json" class="slide-notes">
+      {"title":"感谢页","script":"感谢大家的参与，也再次感谢慕总和屏幕前的每一位朋友。","notes":["感谢大家的参与","你们的反馈，是我们前进的动力","再次感谢慕总，也感谢屏幕前每一位朋友"]}
+      </script>
+    </div>
+  </div>
+
+  <script>
+    var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+    var current = 0;
+    var total = slides.length;
+
+    function showSpeakerNotes(index) {
+      var notesEl = slides[index].querySelector('script.slide-notes');
+      if (!notesEl) return;
+      try {
+        var notes = JSON.parse(notesEl.textContent);
+        console.clear();
+        console.group('Slide ' + (index + 1) + '/' + total + ': ' + notes.title);
+        console.log(notes.script);
+        notes.notes.forEach(function(note) { console.log('- ' + note); });
+        console.groupEnd();
+      } catch (err) {}
+    }
+
+    function updateUI() {
+      var counter = document.getElementById('counter');
+      if (counter) counter.textContent = (current + 1) + ' / ' + total;
+      showSpeakerNotes(current);
+    }
+
+    function goTo(index) {
+      if (index < 0 || index >= total) return;
+      current = index;
+      slides.forEach(function(slide, i) {
+        slide.classList.toggle('active', i === current);
+      });
+      location.hash = 'slide-' + (current + 1);
+      updateUI();
+    }
+
+    function next() { goTo(Math.min(total - 1, current + 1)); }
+    function prev() { goTo(Math.max(0, current - 1)); }
+
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'ArrowRight' || event.key === ' ' || event.key === 'PageDown') {
+        event.preventDefault();
+        next();
+      }
+      if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+        event.preventDefault();
+        prev();
+      }
+      if (event.key === 'Home') {
+        event.preventDefault();
+        goTo(0);
+      }
+      if (event.key === 'End') {
+        event.preventDefault();
+        goTo(total - 1);
+      }
+      if (/^[1-9]$/.test(event.key)) {
+        event.preventDefault();
+        goTo(Number(event.key) - 1);
+      }
+    });
+
+    var touchStart = 0;
+    document.addEventListener('touchstart', function(event) {
+      touchStart = event.touches[0].clientX;
+    });
+    document.addEventListener('touchend', function(event) {
+      var diff = touchStart - event.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) diff > 0 ? next() : prev();
+    });
+
+    var wheelCooldown = false;
+    document.addEventListener('wheel', function(event) {
+      if (wheelCooldown) return;
+      wheelCooldown = true;
+      setTimeout(function() { wheelCooldown = false; }, 600);
+      if (event.deltaY > 0 || event.deltaX > 0) next();
+      else prev();
+    }, { passive: true });
+
+    var match = location.hash.match(/slide-(\d+)/);
+    if (match) goTo(Math.max(0, Math.min(total - 1, Number(match[1]) - 1)));
+    else goTo(0);
+  </script>
+</body>
+</html>

@@ -54,3 +54,12 @@
 - public_path: `pages/panda-fund-ai-assistant-roadshow-full-v01/`
 - resources: `styles.css, assets`
 - risk_check: reviewed before push; public demo page only, no local paths, secrets, or private project archive content found
+
+## 2026-06-18 18:44:35 - PandaAI 社区直播第 9 期｜Quant Agent 全流程实战
+
+- slug: `pandaai-community-live-009-html-v02`
+- source_name: `deck.html`
+- archived_html: `html/2026-06-18_184435_pandaai-community-live-009-html-v02.html`
+- public_path: `pages/pandaai-community-live-009-html-v02/`
+- resources: `assets`
+- risk_check: reviewed before push; public demo page only, no local paths, secrets, or private project archive content found

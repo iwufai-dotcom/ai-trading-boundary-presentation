@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-18",
+  "updated_at": "2026-06-18",
   "items": [
     {
       "slug": "ai-trading-boundary",
@@ -23,6 +23,14 @@
       "source_archive": "html/2026-05-18_163601_panda-fund-ai-assistant-roadshow-full-v01.html",
       "status": "active",
       "updated_at": "2026-05-18"
+    },
+    {
+      "slug": "pandaai-community-live-009-html-v02",
+      "title": "PandaAI 社区直播第 9 期｜Quant Agent 全流程实战",
+      "path": "pages/pandaai-community-live-009-html-v02/",
+      "source_archive": "html/2026-06-18_184435_pandaai-community-live-009-html-v02.html",
+      "status": "active",
+      "updated_at": "2026-06-18"
     }
   ]
 }
