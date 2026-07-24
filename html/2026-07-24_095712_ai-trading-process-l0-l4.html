@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PandaAI｜AI 交易进程：从 L0 到 L4 的探索与思考</title>
+  <style>
+    @font-face{font-family:Panda;src:url("./assets/fonts/Alibaba_PuHuiTi_2.0_55_Regular_55_Regular.v0Jvxhj3.ttf");font-weight:400}
+    @font-face{font-family:Panda;src:url("./assets/fonts/Alibaba_PuHuiTi_2.0_65_Medium_65_Medium.CQXjKuOQ.ttf");font-weight:500}
+    @font-face{font-family:Panda;src:url("./assets/fonts/Alibaba_PuHuiTi_2.0_75_SemiBold_75_SemiBold.RW9Dsu2O.ttf");font-weight:600}
+    :root{--p:#f2f0eb;--ph:#faf9f5;--i:#11151b;--s:#59636e;--m:#8b939c;--l:#c8ccd1;--b:#1768f2;--bd:#0d4ecb;--bs:#dbe7fb;--w:#fff;--f:Panda,"PingFang SC","Microsoft YaHei",sans-serif}
+    *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0}body{overflow:hidden;background:#0b1016;font-family:var(--f);font-synthesis:none;text-rendering:geometricPrecision}deck-stage:not(:defined){visibility:hidden}
+    section{position:relative;overflow:hidden;color:var(--i);background:linear-gradient(90deg,rgba(17,21,27,.026) 1px,transparent 1px) 0 0/80px 80px,linear-gradient(rgba(17,21,27,.022) 1px,transparent 1px) 0 0/80px 80px,linear-gradient(135deg,var(--ph),var(--p) 62%,#eef1f4)}
+    section:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.18;background-image:radial-gradient(rgba(17,21,27,.22) .55px,transparent .7px);background-size:7px 7px;mix-blend-mode:multiply}
+    section:after{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,var(--b) 0 31%,var(--i) 31% 34%,transparent 34%)}
+    .id{position:absolute;left:72px;right:72px;top:34px;height:52px;display:flex;align-items:center;z-index:30}.id img{width:194px;height:32px;object-fit:contain;object-position:left center}.id .div{width:1px;height:24px;margin-left:24px;background:#11151b4d}.topic{margin-left:15px;font-size:14px;font-weight:500}.topic b{color:var(--b);font-weight:600}.tag{margin-left:auto;position:relative;height:34px;padding:0 18px 0 30px;display:flex;align-items:center;background:var(--i);color:#fff;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}.tag:before{content:"";position:absolute;left:0;top:0;width:12px;height:34px;background:linear-gradient(45deg,#fff 25%,transparent 25% 75%,#fff 75%) 0 0/8px 8px,linear-gradient(45deg,#fff 25%,var(--i) 25% 75%,#fff 75%) 4px 4px/8px 8px}
+    .meta{position:absolute;left:72px;right:72px;bottom:28px;height:30px;display:flex;align-items:flex-end;z-index:25}.meta .ctx{display:flex;align-items:center;gap:12px;color:var(--s);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase}.meta .ctx:before{content:"";width:48px;height:4px;background:var(--b)}.meta .num{margin-left:auto;display:flex;align-items:baseline;gap:9px;font-size:25px;line-height:1;font-weight:600}.meta small{color:var(--m);font-size:11px;font-weight:500;letter-spacing:.12em}
+    .ey{display:flex;align-items:center;gap:10px;color:var(--s);font-size:13px;font-weight:600;letter-spacing:.13em;text-transform:uppercase}.ey:before{content:"";width:10px;height:10px;background:var(--b)}.head{position:absolute;left:72px;right:72px;top:118px;z-index:8}.head .ey{margin-bottom:18px}.head h1{margin:0;font-size:61px;line-height:1.08;font-weight:600;letter-spacing:-.048em}.soft{color:var(--s);font-weight:500}.blue{color:var(--b)}.black{background:var(--i);color:#fff}.bluebg{background:var(--b);color:#fff}.cut{clip-path:polygon(0 0,98% 0,100% 8%,100% 100%,0 100%)}.k{color:#8db8ff;font-size:13px;font-weight:600;letter-spacing:.13em;text-transform:uppercase}
+
+    /* 01 cover — retained as low-priority placeholder */
+    .p01 .id .div,.p01 .topic{display:none}.covercopy{position:absolute;left:72px;top:145px;width:740px}.covercopy .ey{margin-bottom:34px}.covercopy h1{margin:0;font-size:96px;line-height:.98;font-weight:600;letter-spacing:-.065em}.covercopy h1 span{display:block;margin-top:20px;color:var(--s);font-size:49px;line-height:1.08;font-weight:500;letter-spacing:-.035em}.speaker{position:absolute;left:72px;top:625px;padding-top:22px;width:555px;border-top:7px solid var(--i)}.speaker strong{display:block;font-size:28px}.speaker span{display:block;margin-top:9px;color:var(--s);font-size:18px}.coverfield{position:absolute;left:820px;top:118px;width:708px;height:632px;overflow:hidden;background:linear-gradient(145deg,#ffffff1a,transparent 44%),var(--b);color:#fff;clip-path:polygon(0 0,94% 0,100% 7%,100% 100%,0 100%)}.coverfield:before{content:"";position:absolute;left:-70px;top:286px;width:840px;height:8px;background:#ffffffdd;transform:rotate(-19deg)}.coverfield:after{content:"";position:absolute;left:375px;top:146px;width:32px;height:32px;background:#fff;transform:rotate(45deg);box-shadow:22px 22px 0 #ffffff33}.c0,.c4{position:absolute;font-size:156px;line-height:.82;font-weight:600;letter-spacing:-.075em}.c0{left:48px;top:58px;color:#ffffff47}.c4{right:46px;bottom:112px}.ct{position:absolute;left:0;right:0;bottom:0;height:94px;padding:0 46px;display:flex;align-items:center;background:var(--i);font-size:34px;font-weight:600}
+
+    /* 02 system */
+    .p02 .head h1 .pre{display:block;margin-bottom:4px;color:var(--s);font-size:34px;font-weight:500}.system{position:absolute;left:72px;top:346px;width:1456px;height:404px;padding:29px 38px;background:var(--i);color:#fff;overflow:hidden}.system:before{content:"SYSTEM";position:absolute;right:18px;top:-48px;color:#ffffff0d;font-size:220px;font-weight:600;letter-spacing:-.06em}.roles{position:absolute;left:38px;right:38px;top:86px;display:grid;grid-template-columns:repeat(6,1fr)}.roles span{position:relative;padding-left:22px;font-size:25px;font-weight:600}.roles span:before{content:"";position:absolute;left:0;top:8px;width:10px;height:10px;background:var(--b)}.loop{position:absolute;left:48px;right:58px;top:174px;height:104px;border-top:7px solid var(--b);border-right:7px solid var(--b);border-bottom:2px solid #ffffff52}.loop:before{content:"";position:absolute;left:-3px;bottom:-10px;width:18px;height:18px;border-left:5px solid #fff;border-bottom:5px solid #fff;transform:rotate(45deg)}.sysnote{position:absolute;left:38px;bottom:26px;font-size:25px;line-height:1.3;font-weight:500}.sysnote strong{color:#8db8ff}
+
+    /* 03 two questions */
+    .questions{position:absolute;left:72px;top:292px;width:1456px;height:462px;display:grid;grid-template-columns:1fr 1fr}.q{position:relative;padding:42px 46px}.q:first-child{border:1px solid #11151b44;background:#ffffff3b}.q:last-child{background:var(--b);color:#fff;clip-path:polygon(6% 0,100% 0,100% 100%,0 100%,0 9%)}.qnum{display:block;font-size:110px;line-height:.85;font-weight:600;letter-spacing:-.07em}.q:first-child .qnum{color:var(--i)}.q:last-child .qnum{color:#ffffff55}.q p{position:absolute;left:46px;right:44px;bottom:52px;margin:0;font-size:34px;line-height:1.34;font-weight:600}.q em{font-style:normal;color:var(--b)}.q:last-child em{color:#fff}
+
+    /* 04 overview */
+    .levels{position:absolute;left:72px;top:308px;width:1456px;height:470px;border-top:1px solid #11151b55;background:#ffffff38;display:grid;grid-template-columns:repeat(5,1fr);overflow:hidden}.levels:before{content:"";position:absolute;inset:auto 0 0;height:270px;background:#1768f217;clip-path:polygon(0 92%,20% 92%,20% 78%,40% 78%,40% 61%,60% 61%,60% 42%,80% 42%,80% 17%,100% 17%,100% 100%,0 100%)}.lv{position:relative;padding:27px 22px;border-left:1px solid #11151b2e;z-index:2}.lv:last-child{border-right:1px solid #11151b2e}.lv b{display:block;font-size:68px;line-height:.92;letter-spacing:-.06em}.lv:nth-child(n+3) b{color:var(--b)}.lv strong{display:block;margin-top:19px;font-size:22px;line-height:1.3}.lv p{margin:9px 0 0;color:var(--s);font-size:17px;line-height:1.38;font-weight:500}.lv small{position:absolute;left:22px;bottom:67px;color:var(--s);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}.axes{position:absolute;left:0;right:0;bottom:0;height:70px;display:grid;grid-template-columns:repeat(3,1fr);background:var(--i);color:#fff}.axes span{display:flex;align-items:center;justify-content:center;gap:12px;font-size:20px;font-weight:600;border-right:1px solid #ffffff33}.axes span:before{content:"";width:10px;height:10px;background:var(--b)}
+
+    /* 05 comparison */
+    .compare{position:absolute;left:72px;top:296px;width:1456px;height:505px;display:grid;grid-template-columns:1fr 1fr}.side{position:relative;padding:34px 42px}.side:first-child{border:1px solid #11151b40;background:#ffffff42}.side:last-child{background:var(--b);color:#fff;clip-path:polygon(5% 0,100% 0,100% 100%,0 100%,0 8%)}.side b{display:block;font-size:90px;line-height:.9;letter-spacing:-.06em}.side small{display:block;margin-top:25px;color:var(--s);font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}.side:last-child small{color:#ffffffaa}.side p{margin:18px 0 0;font-size:26px;line-height:1.45;font-weight:600}.action{margin-top:27px;display:flex;align-items:center;gap:18px;font-size:23px;font-weight:600}.action .src{padding:12px 16px;background:#fff;color:var(--i)}.arrow{width:58px;height:7px;background:#fff;position:relative}.arrow:after{content:"";position:absolute;right:-2px;top:-7px;width:18px;height:18px;border-top:6px solid #fff;border-right:6px solid #fff;transform:rotate(45deg)}.conclusion{position:absolute;left:0;right:0;bottom:0;height:74px;padding:0 38px;display:flex;align-items:center;background:var(--i);color:#fff;font-size:24px;font-weight:600}.conclusion:before{content:"";width:66px;height:7px;margin-right:20px;background:var(--b)}
+
+    /* 06 workflow */
+    .workflow{position:absolute;left:72px;top:310px;width:1456px;height:270px;background:var(--i);color:#fff;padding:29px 38px}.workflow:before{content:"L2";position:absolute;right:30px;top:-32px;color:#ffffff0c;font-size:210px;font-weight:600}.steps{position:absolute;left:38px;right:38px;top:82px;display:grid;grid-template-columns:repeat(6,1fr);border-top:7px solid var(--b)}.steps span{min-height:92px;padding:20px 12px 0 0;font-size:20px;font-weight:600;border-right:1px solid #ffffff38}.skill{position:absolute;right:38px;bottom:-47px;width:630px;height:94px;padding:0 30px;display:flex;align-items:center;justify-content:space-between;background:var(--b);color:#fff;clip-path:polygon(4% 0,100% 0,100% 100%,0 100%,0 26%)}.skill strong{font-size:39px}.skill span{font-size:17px}.resp{position:absolute;left:72px;top:656px;width:1456px;display:grid;grid-template-columns:1fr 1fr;gap:70px}.resp div{padding-top:18px;border-top:6px solid var(--b)}.resp div:last-child{border-color:var(--i)}.resp strong{display:block;margin-bottom:9px;color:var(--b);font-size:25px}.resp div:last-child strong{color:var(--i)}.resp span{font-size:21px;font-weight:500}
+
+    /* 07 L2 case */
+    .case{position:absolute;left:72px;top:315px;width:1456px;height:430px;display:grid;grid-template-columns:1fr 1fr;gap:38px}.casecol{position:relative;padding:36px 40px}.casecol:first-child{background:var(--b);color:#fff}.casecol:last-child{background:var(--i);color:#fff;clip-path:polygon(5% 0,100% 0,100% 100%,0 100%,0 9%)}.casecol b{font-size:58px;line-height:1}.casecol small{display:block;margin-top:10px;color:#ffffff99;font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}.casecol ul{margin:48px 0 0;padding:0;list-style:none;display:grid;gap:18px}.casecol li{display:flex;align-items:center;gap:13px;font-size:24px;font-weight:500}.casecol li:before{content:"";width:9px;height:9px;background:#fff}.casefoot{position:absolute;left:72px;right:72px;top:760px;font-size:24px;font-weight:600}.casefoot strong{color:var(--b)}
+
+    /* 08 continuous research */
+    .research{position:absolute;left:72px;top:338px;width:1456px;height:412px;display:grid;grid-template-columns:1fr 330px}.rfield{position:relative;background:var(--b);color:#fff;overflow:hidden}.rfield:before{content:"CONTEXT";position:absolute;right:18px;top:-44px;color:#ffffff16;font-size:205px;font-weight:600;letter-spacing:-.06em}.rtitle{position:absolute;left:38px;top:26px;font-size:39px;font-weight:600}.agents{position:absolute;left:38px;right:38px;top:132px;display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid #ffffff66}.agents span{padding-top:22px;font-size:21px;font-weight:600}.agents span:after{content:"→";float:right;color:#ffffff77}.agents span:last-child:after{content:""}.rnote{position:absolute;left:38px;bottom:31px;font-size:24px;line-height:1.4;font-weight:600}.rnote small{display:block;margin-top:8px;color:#ffffffc2;font-size:18px;font-weight:500}.human{position:relative;background:var(--i);color:#fff;padding:38px}.human:before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--b)}.human b{display:block;margin-top:28px;font-size:58px}.human p{margin:42px 0 0;font-size:20px;line-height:2.2;font-weight:500}
+
+    /* 09 context decision */
+    .decision{position:absolute;left:72px;top:304px;width:1456px;height:470px;display:grid;grid-template-columns:560px 1fr;gap:58px}.ask{position:relative;background:var(--i);color:#fff;padding:40px}.ask small{color:#8db8ff;font-size:13px;font-weight:600;letter-spacing:.13em;text-transform:uppercase}.ask b{display:block;margin-top:38px;font-size:56px;line-height:1.12}.ask span{position:absolute;left:40px;right:38px;bottom:34px;color:#ffffff90;font-size:17px;line-height:1.5}.evidence{display:grid;grid-template-rows:repeat(3,1fr)}.ev{position:relative;padding:26px 30px;border-top:1px solid #11151b55}.ev:first-child{border-top:7px solid var(--b)}.ev b{display:block;font-size:27px}.ev p{margin:9px 0 0;color:var(--s);font-size:19px;line-height:1.4}.ev:before{content:attr(data-n);position:absolute;right:12px;top:2px;color:#11151b0d;font-size:92px;font-weight:600}
+
+    /* 10 permission */
+    .permission{position:absolute;left:72px;top:306px;width:1456px;height:445px;display:grid;grid-template-columns:1fr 1fr}.perm{padding:34px 40px}.perm:first-child{background:var(--b);color:#fff}.perm:last-child{background:var(--i);color:#fff;clip-path:polygon(5% 0,100% 0,100% 100%,0 100%,0 9%)}.perm small{font-size:13px;color:#ffffffaa;font-weight:600;letter-spacing:.12em;text-transform:uppercase}.perm b{display:block;margin-top:16px;font-size:36px}.perm p{margin:32px 0 0;font-size:22px;line-height:1.75;font-weight:500}.guard{position:absolute;left:34px;right:34px;bottom:24px;padding-top:16px;border-top:1px solid #ffffff55;font-size:16px;line-height:1.6;color:#ffffffcc}.p10foot{position:absolute;left:72px;top:770px;font-size:21px;font-weight:600}.p10foot:before{content:"";display:inline-block;width:12px;height:12px;margin-right:13px;background:var(--b)}
+
+    /* 11 alpha question */
+    .p11{background:var(--i);color:#fff}.p11:before{opacity:.08;background-image:radial-gradient(#fff .55px,transparent .7px)}.p11:after{background:linear-gradient(90deg,var(--b) 0 58%,#fff 58% 59%,transparent 59%)}.p11 .id img{content:url("./assets/pandaai-trading-white.svg")}.p11 .id .div{background:#ffffff55}.p11 .topic{color:#fff}.p11 .tag{background:#fff;color:var(--i)}.questionhero{position:absolute;left:72px;right:90px;top:162px}.questionhero .ey{color:#9ebfff}.questionhero h1{margin:45px 0 0;max-width:1380px;font-size:78px;line-height:1.12;font-weight:600;letter-spacing:-.055em}.questionhero h1 em{font-style:normal;color:#79a8ff}.questionhero .pause{position:absolute;left:0;top:470px;width:930px;height:8px;background:linear-gradient(90deg,var(--b) 0 64%,#fff 64%)}.p11 .meta .ctx,.p11 .meta .num{color:#fff}.p11 .meta small{color:#ffffff88}
+
+    /* 12 alpha shift */
+    .shift{position:absolute;left:72px;top:300px;width:1456px;height:454px}.shiftmain{height:210px;display:flex;align-items:center;justify-content:center;gap:48px;background:#ffffff42;border:1px solid #11151b33}.shiftmain span{font-size:58px;font-weight:600}.shiftmain .from{color:var(--s)}.shiftmain .to{color:var(--b)}.shiftmain i{width:130px;height:8px;background:var(--i);position:relative}.shiftmain i:after{content:"";position:absolute;right:-2px;top:-10px;width:24px;height:24px;border-top:7px solid var(--i);border-right:7px solid var(--i);transform:rotate(45deg)}.chain{height:174px;margin-top:30px;padding:27px 38px;background:var(--i);color:#fff}.chainrow{display:grid;grid-template-columns:repeat(5,1fr);border-top:7px solid var(--b)}.chainrow span{padding-top:15px;font-size:20px;font-weight:600}.chainnote{margin-top:14px;color:#ffffffbb;font-size:16px;line-height:1.45}
+
+    /* 13 three differences */
+    .three{position:absolute;left:72px;top:300px;width:1456px;height:480px;display:grid;grid-template-rows:repeat(3,1fr);border-top:7px solid var(--b)}.threerow{display:grid;grid-template-columns:100px 260px 420px 1fr;align-items:center;border-bottom:1px solid #11151b3b}.threerow:nth-child(2){background:#1768f20d}.threerow b{font-size:52px;color:var(--b);letter-spacing:-.05em}.threerow h2{margin:0;font-size:31px}.threerow p{margin:0;color:var(--s);font-size:19px;line-height:1.4;font-weight:500}.threerow span{font-size:18px;line-height:1.5;font-weight:500}.threerow>*{padding-left:26px}
+
+    /* 14 compression */
+    .compress{position:absolute;left:72px;top:305px;width:1456px;height:450px;display:grid;grid-template-columns:1fr 1fr;gap:34px}.comp{position:relative;padding:38px 42px}.comp:first-child{background:var(--i);color:#fff}.comp:last-child{background:var(--b);color:#fff;clip-path:polygon(5% 0,100% 0,100% 100%,0 100%,0 9%)}.comp small{color:#ffffff99;font-size:13px;font-weight:600;letter-spacing:.12em}.comp b{display:block;margin-top:24px;font-size:39px}.comp p{margin:38px 0 0;font-size:24px;line-height:1.5}.compmark{position:absolute;right:32px;bottom:20px;font-size:82px;color:#ffffff18;font-weight:600}.compfoot{position:absolute;left:72px;top:776px;font-size:21px;font-weight:600}
+
+    /* 15 foundation */
+    .why{position:absolute;left:72px;top:286px;width:1456px;font-size:25px;line-height:1.4;font-weight:500}.foundation{position:absolute;left:72px;top:385px;width:1456px;height:365px;background:var(--i);color:#fff;padding:28px 38px}.foundation:before{content:"L2";position:absolute;right:28px;top:-36px;color:#ffffff0d;font-size:220px;font-weight:600}.flayer{position:relative;height:102px;display:grid;grid-template-columns:240px 1fr;align-items:center;border-top:1px solid #ffffff33;z-index:2}.flayer:first-child{border-top:7px solid var(--b)}.flayer b{font-size:28px}.flayer span{font-size:20px;color:#ffffffc9;word-spacing:10px}
+
+    /* 16 bridge */
+    .bridge{position:absolute;left:72px;top:307px;width:1456px;height:455px;display:grid;grid-template-columns:1fr 1fr}.stage{position:relative;padding:38px 42px}.stage:first-child{background:var(--b);color:#fff}.stage:nth-child(2){background:var(--i);color:#fff;clip-path:polygon(7% 0,100% 0,100% 100%,0 100%,0 10%)}.stage b{font-size:86px;line-height:.9}.stage h2{margin:25px 0 0;font-size:31px}.stage p{margin:26px 0 0;font-size:21px;line-height:1.7;color:#ffffffd0}.contextbridge{position:absolute;left:50%;top:175px;width:180px;height:74px;margin-left:-90px;display:flex;align-items:center;justify-content:center;background:#fff;color:var(--i);font-size:21px;font-weight:600;z-index:4;box-shadow:0 0 0 8px #f2f0eb}.bridgefoot{position:absolute;left:72px;top:780px;font-size:20px;font-weight:600}
+
+    /* 17 ending */
+    .p17{background:var(--b);color:#fff}.p17:before{opacity:.1;background-image:radial-gradient(#fff .55px,transparent .7px)}.p17:after{background:linear-gradient(90deg,#fff 0 32%,var(--i) 32% 35%,transparent 35%)}.p17 .id img{content:url("./assets/pandaai-trading-white.svg")}.p17 .id .div{background:#ffffff66}.p17 .topic{color:#fff}.p17 .topic b{color:#fff}.p17 .tag{background:var(--i)}.p17 .meta .ctx,.p17 .meta .num{color:#fff}.p17 .meta small{color:#ffffff9b}.ending{position:absolute;left:72px;right:72px;top:142px}.ending h1{margin:0;width:1280px;font-size:76px;line-height:1.1;font-weight:600;letter-spacing:-.055em}.endloop{position:absolute;left:0;right:0;top:265px;height:130px;border-top:8px solid #fff;border-right:8px solid #fff;border-bottom:2px solid #ffffff88;display:grid;grid-template-columns:repeat(6,1fr);padding-top:28px}.endloop span{font-size:23px;font-weight:600}.endcopy{position:absolute;left:0;top:458px;width:920px;font-size:25px;line-height:1.55;font-weight:500}.endbrand{position:absolute;right:0;top:458px;width:410px;padding:31px 34px;background:var(--i);font-size:23px;line-height:1.5;font-weight:600}
+
+    /* O11 — whole-deck calibration: typography, colour weight and cross-page breathing */
+    :root{--air:#e8f0fc;--ice:#dbe8fb;--paper:#f7f6f2;--blueink:#0d54c7}
+    body{-webkit-font-smoothing:antialiased;font-kerning:normal;text-rendering:optimizeLegibility}
+    section:not(.p11):not(.p17){background:
+      linear-gradient(90deg,rgba(17,21,27,.022) 1px,transparent 1px) 0 0/80px 80px,
+      linear-gradient(rgba(17,21,27,.019) 1px,transparent 1px) 0 0/80px 80px,
+      radial-gradient(circle at 88% 10%,rgba(23,104,242,.065),transparent 28%),
+      radial-gradient(circle at 12% 96%,rgba(255,255,255,.86),transparent 35%),
+      linear-gradient(135deg,#fbfaf6,var(--p) 64%,#edf1f6)}
+    section:before{opacity:.13}
+    .head h1{letter-spacing:-.035em}
+    .meta .num{font-size:23px}
+    .tag{box-shadow:0 9px 24px rgba(17,21,27,.08)}
+    .system,.research,.foundation{box-shadow:0 18px 50px rgba(17,21,27,.08)}
+    .skill,.contextbridge,.endbrand{box-shadow:0 16px 36px rgba(17,21,27,.13)}
+
+    .p03 .head h1{font-size:66px}
+    .p04 .head h1{font-size:59px}
+    .p05 .head h1{font-size:65px}
+    .p07 .head h1{font-size:58px;line-height:1.07}
+    .p08 .head h1{font-size:58px;line-height:1.06}
+    .p09 .head h1{font-size:60px}
+    .p10 .head h1{font-size:59px}
+    .p12 .head h1{font-size:58px}
+    .p13 .head h1{font-size:64px}
+    .p14 .head h1{font-size:58px}
+    .p15 .head h1{font-size:70px}
+    .p16 .head h1{font-size:57px}
+
+    .p05 .head .blue,.p13 .head .blue,.p14 .head .blue{position:relative;display:inline-block;color:var(--i)}
+    .p05 .head .blue:after,.p13 .head .blue:after,.p14 .head .blue:after{content:"";position:absolute;left:0;right:0;bottom:-9px;height:7px;background:var(--b);transform-origin:left center}
+
+    .p05 .compare{top:294px;height:507px;grid-template-columns:.94fr 1.06fr;gap:24px}
+    .p05 .side:first-child{border:0;border-top:7px solid var(--i);background:#ffffff4d}
+    .p05 .side:nth-child(2){background:linear-gradient(135deg,#ffffffa8,transparent 55%),var(--air);color:var(--i);clip-path:polygon(5% 0,100% 0,100% 100%,0 100%,0 8%);border-top:7px solid var(--b)}
+    .p05 .side:nth-child(2) b{color:var(--b)}
+    .p05 .side:nth-child(2) small{color:var(--blueink)}
+    .p05 .action{margin-top:30px}
+    .p05 .action .src{background:var(--i);color:#fff}
+    .p05 .arrow{background:var(--b)}
+    .p05 .arrow:after{border-color:var(--b);border-left:0;border-bottom:0}
+    .p05 .conclusion{height:72px;background:var(--i)}
+
+    .p07 .case{gap:26px}
+    .p07 .casecol:first-child{background:linear-gradient(145deg,#ffffff9c,transparent 58%),var(--air);color:var(--i);border-top:7px solid var(--b)}
+    .p07 .casecol:last-child{background:#ffffff52;color:var(--i);clip-path:none;border-top:7px solid var(--i);box-shadow:inset 0 0 0 1px #11151b20}
+    .p07 .casecol small{color:var(--s)}
+    .p07 .casecol:first-child small{color:var(--blueink)}
+    .p07 .casecol li:before{background:var(--b)}
+    .p07 .casecol:last-child li:before{background:var(--i)}
+
+    .p10 .permission{grid-template-columns:1.12fr .88fr}
+    .p10 .perm:first-child{background:linear-gradient(145deg,#ffffffb8,transparent 60%),var(--air);color:var(--i);border-top:7px solid var(--b)}
+    .p10 .perm:first-child small{color:var(--blueink)}
+    .p10 .perm:first-child b{color:var(--blueink)}
+    .p10 .perm:first-child .guard{color:var(--s);border-color:#11151b3d}
+
+    .p12 .chain{background:linear-gradient(90deg,#ffffff7a,transparent),var(--air);color:var(--i);border:1px solid #11151b24}
+    .p12 .chainnote{color:var(--s)}
+
+    .p14 .compress{grid-template-columns:.96fr 1.04fr}
+    .p14 .comp:last-child{background:linear-gradient(145deg,#ffffffa8,transparent 58%),var(--air);color:var(--i);border-top:7px solid var(--b)}
+    .p14 .comp:last-child small{color:var(--blueink)}
+    .p14 .comp:last-child .compmark{color:#1768f21f}
+
+    .p15 .why{font-size:23px;letter-spacing:-.012em}
+    .p15 .foundation{background:linear-gradient(105deg,#11151b 0 74%,#151c26 74% 100%)}
+    .p16 .contextbridge{box-shadow:0 0 0 8px #f2f0eb,0 18px 42px rgba(17,21,27,.16)}
+
+    /* O12 — targeted refinement: structure pages, distant reading and final-act progression */
+    .p04 .axes{height:70px;background:#f8f9fbde;color:var(--i);border-top:7px solid var(--i);box-shadow:0 -14px 34px rgba(17,21,27,.05)}
+    .p04 .axes span{border-right:1px solid #11151b28}
+    .p04 .axes span:before{background:var(--b)}
+
+    .p06 .workflow{background:linear-gradient(110deg,#10151c 0 73%,#151d27 73% 100%)}
+    .p06 .steps{top:108px;border-top:2px solid #ffffff4d}
+    .p06 .steps:before{content:"";position:absolute;left:0;top:-4px;width:100%;height:6px;background:var(--b)}
+    .p06 .steps span{position:relative;min-height:92px;padding:29px 12px 0 0;border-right:0;font-size:21px}
+    .p06 .steps span:before{content:"";position:absolute;left:0;top:-8px;width:14px;height:14px;background:var(--b);box-shadow:0 0 0 5px #111820}
+    .p06 .skill{width:560px;background:linear-gradient(135deg,#fff,transparent 62%),var(--air);color:var(--i);border-top:7px solid var(--b)}
+    .p06 .skill strong{color:var(--b)}
+    .p06 .skill span{color:var(--s);font-weight:600}
+
+    .p09 .decision{grid-template-columns:610px 1fr;gap:44px}
+    .p09 .ask span{font-size:18px;line-height:1.6;color:#ffffffb8}
+    .p09 .ev{padding-left:34px}
+    .p09 .ev p{font-size:20px;color:#46515d}
+
+    .p12 .chain{height:184px;padding-top:27px}
+    .p12 .chainnote{font-size:17px;line-height:1.5;color:#46515d}
+
+    .p13 .threerow{grid-template-columns:100px 280px 430px 1fr}
+    .p13 .threerow p{font-size:20px;color:#46515d}
+    .p13 .threerow span{font-size:18px;line-height:1.55}
+
+    .p15 .why{font-size:24px}
+    .p15 .flayer{grid-template-columns:250px 1fr}
+    .p15 .flayer span{font-size:21px}
+
+    .p16 .bridge{grid-template-columns:58% 42%}
+    .p16 .contextbridge{left:58%;top:-22px;width:160px;height:52px;margin-left:-80px;font-size:18px}
+    .p16 .stage:first-child{padding-right:130px}
+    .p16 .stage:nth-child(2){padding-left:68px}
+
+    .p17 .endcopy{font-size:27px;line-height:1.52}
+    .p17 .endbrand{font-size:24px}
+
+    /* O15 — stage bookends rebuilt as a computational field, not a symbolic object */
+    .p01 .id,.p01 .meta,.p17 .id,.p17 .meta{display:none}
+    .book15-brand{position:absolute;left:72px;top:40px;width:224px;height:40px;display:flex;align-items:center;z-index:20}
+    .book15-brand img{display:block;width:224px;height:36px;object-fit:contain;object-position:left center}
+    .book15-event{position:absolute;right:72px;top:47px;display:flex;align-items:center;gap:13px;font-size:12px;line-height:1;font-weight:600;letter-spacing:.16em;text-transform:uppercase;z-index:20}
+    .book15-event i{width:18px;height:18px;background:conic-gradient(currentColor 0 25%,transparent 0 50%,currentColor 0 75%,transparent 0) 0 0/8px 8px}
+
+    section.p01.p01{background:
+      radial-gradient(ellipse at 89% 48%,rgba(42,119,248,.105),transparent 30%),
+      radial-gradient(ellipse at 61% 96%,rgba(140,185,255,.09),transparent 34%),
+      linear-gradient(115deg,rgba(255,255,255,.97),rgba(250,249,245,.98) 43%,rgba(239,243,248,.98) 100%);
+      color:#10151c}
+    .p01:before{opacity:.11;background-image:radial-gradient(rgba(17,21,27,.28) .45px,transparent .62px);background-size:9px 9px;mix-blend-mode:multiply}
+    .p01:after{height:4px;background:linear-gradient(90deg,#1768f2 0 15%,#11151b 15% 16.6%,transparent 16.6%)}
+    .cover15{position:absolute;inset:0}
+    .cover15-title{position:absolute;left:72px;top:151px;width:1030px;z-index:8}
+    .cover15-title:before{content:"AI TRADING / PROCESS";display:block;margin-bottom:31px;color:#1768f2;font-size:13px;font-weight:600;letter-spacing:.19em}
+    .cover15-title h1{display:flex;align-items:baseline;margin:0;font-size:122px;line-height:.98;font-weight:500;letter-spacing:-.072em}
+    .cover15-title h1 b{margin-right:.07em;font-weight:600;letter-spacing:-.055em}
+    .cover15-title h1 span{font-weight:500}
+    .cover15-title p{margin:28px 0 0;color:#4f5b68;font-size:39px;line-height:1.14;font-weight:500;letter-spacing:-.033em}
+    .cover15-field{position:absolute;left:302px;top:105px;width:1298px;height:758px;z-index:2;pointer-events:none}
+    .cover15-field svg{display:block;width:100%;height:100%;overflow:visible}
+    .cover15-speaker{position:absolute;left:72px;bottom:68px;display:grid;grid-template-columns:46px auto;column-gap:18px;align-items:center;z-index:9}
+    .cover15-speaker:before{content:"";width:46px;height:4px;background:#1768f2}
+    .cover15-speaker strong{font-size:25px;line-height:1.15;font-weight:600}
+    .cover15-speaker span{grid-column:2;margin-top:8px;color:#66717c;font-size:15px;line-height:1.2;font-weight:500;letter-spacing:.02em}
+
+    section.p17.p17{background:
+      radial-gradient(ellipse at 88% 48%,rgba(27,102,240,.19),transparent 31%),
+      radial-gradient(ellipse at 60% 110%,rgba(31,92,196,.13),transparent 34%),
+      linear-gradient(128deg,#111822 0,#0a1018 52%,#060a10 100%);
+      color:#fff}
+    .p17:before{opacity:.12;background-image:radial-gradient(rgba(255,255,255,.26) .44px,transparent .62px);background-size:9px 9px;mix-blend-mode:screen}
+    .p17:after{height:4px;background:linear-gradient(90deg,#fff 0 10%,#1768f2 10% 17%,transparent 17%)}
+    .p17 .book15-event{color:#fff}
+    .close15{position:absolute;inset:0;z-index:5}
+    .close15-title{position:absolute;left:72px;top:136px;width:1070px;margin:0;z-index:7;letter-spacing:-.06em}
+    .close15-pre,.close15-main,.close15-thesis{display:block}
+    .close15-pre{margin-bottom:13px;color:#9faab6;font-size:34px;line-height:1.15;font-weight:500;letter-spacing:-.025em}
+    .close15-main{font-size:108px;line-height:.99;font-weight:600}
+    .close15-thesis{margin-top:20px;color:#f5f7fa;font-size:63px;line-height:1.1;font-weight:500;letter-spacing:-.042em}
+    .close15-thesis em{margin-right:16px;font-style:normal;font-weight:600}
+    .close15-thesis em:before{content:"";display:inline-block;width:39px;height:4px;margin-right:18px;background:#4389fa;transform:translateY(-14px)}
+    .close15-field{position:absolute;inset:0;z-index:1;pointer-events:none}
+    .close15-field svg{display:block;width:100%;height:100%;overflow:hidden}
+    .close15-copy{position:absolute;left:72px;top:527px;width:710px;color:#b9c3ce;font-size:24px;line-height:1.62;font-weight:500;z-index:7}
+    .close15-signature{position:absolute;left:72px;top:714px;padding-left:62px;color:#f4f7fa;font-size:27px;line-height:1.35;font-weight:500;z-index:7}
+    .close15-signature:before{content:"";position:absolute;left:0;top:16px;width:43px;height:4px;background:#4389fa}
+    .close15-signature strong{color:#75a9fb;font-weight:600}
+    .close15-cycle{position:absolute;right:72px;bottom:39px;display:flex;align-items:center;color:#ffffff70;font-size:13px;font-weight:500;letter-spacing:.09em;white-space:nowrap;z-index:7}
+    .close15-cycle span+span:before{content:"/";margin:0 17px;color:#5d98f6}
+
+    @media(prefers-reduced-motion:no-preference){
+      .p01[data-deck-active] .cover15-traces{animation:o15FieldOpen 10s ease-in-out infinite}
+      .p17[data-deck-active] .close15-traces{animation:o15FieldClose 12s ease-in-out infinite}
+      .p17[data-deck-active] .close15-flow{animation:o15FieldFlow 15s linear infinite}
+    }
+    @keyframes o15FieldOpen{0%,100%{transform:translate(0,0)}50%{transform:translate(-5px,4px)}}
+    @keyframes o15FieldClose{0%,100%{transform:translate(0,0)}50%{transform:translate(5px,-3px)}}
+    @keyframes o15FieldFlow{to{stroke-dashoffset:-260}}
+
+    @media(prefers-reduced-motion:no-preference){[data-deck-active] .id,[data-deck-active] .meta,[data-deck-active] .ey{animation:up .5s both}[data-deck-active] h1{animation:up .64s .08s both}[data-deck-active] main>div:not(.head):not(.covercopy){animation:up .62s .18s both}}@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+    @media print{@page{size:1600px 900px;margin:0}html,body{width:1600px;height:auto;overflow:visible;background:#fff}deck-stage{display:block;width:1600px;height:auto}deck-stage>section{position:relative!important;width:1600px!important;height:900px!important;break-after:page;opacity:1!important;visibility:visible!important}}
+  </style>
+</head>
+<body>
+<deck-stage width="1600" height="900" no-rail>
+  <section class="p01" data-label="E2-01 封面">
+    <div class="book15-brand"><img src="./assets/pandaai-trading-black.svg" alt="PandaAI Trading"></div>
+    <div class="book15-event"><i aria-hidden="true"></i><span>AdventureX Workshop</span></div>
+    <main class="cover15">
+      <div class="cover15-title"><h1><b>AI</b><span>交易进程</span></h1><p>从 L0 到 L4 的探索与思考</p></div>
+      <div class="cover15-field" aria-hidden="true">
+        <svg viewBox="0 0 1300 760" role="presentation">
+          <defs>
+            <linearGradient id="o15-open-trace" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0" stop-color="#1768f2" stop-opacity="0"/>
+              <stop offset=".32" stop-color="#1768f2" stop-opacity=".5"/>
+              <stop offset=".68" stop-color="#2f7df7" stop-opacity=".94"/>
+              <stop offset="1" stop-color="#8abbff" stop-opacity=".12"/>
+            </linearGradient>
+            <linearGradient id="o15-open-trace-soft" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0" stop-color="#0e54d2" stop-opacity="0"/>
+              <stop offset=".58" stop-color="#1768f2" stop-opacity=".2"/>
+              <stop offset="1" stop-color="#75afff" stop-opacity=".04"/>
+            </linearGradient>
+            <radialGradient id="o15-open-haze" cx=".68" cy=".48" r=".58">
+              <stop offset="0" stop-color="#2475f3" stop-opacity=".22"/>
+              <stop offset=".56" stop-color="#3a85f6" stop-opacity=".06"/>
+              <stop offset="1" stop-color="#3a85f6" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="o15-open-blur" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="28"/>
+            </filter>
+          </defs>
+          <ellipse cx="955" cy="395" rx="330" ry="265" fill="url(#o15-open-haze)" filter="url(#o15-open-blur)"/>
+          <g class="cover15-traces" fill="none" stroke-linecap="round">
+            <g stroke="url(#o15-open-trace-soft)">
+              <path d="M210 738C398 693 521 610 682 485C846 358 1013 188 1265 30" stroke-width="44" opacity=".38"/>
+              <path d="M268 752C460 697 612 632 783 531C964 424 1103 319 1274 252" stroke-width="28" opacity=".3"/>
+              <path d="M332 755C520 718 687 683 866 629C1037 577 1172 513 1280 449" stroke-width="20" opacity=".22"/>
+            </g>
+            <g stroke="url(#o15-open-trace)">
+              <path d="M196 728C391 668 515 578 660 446C820 300 1010 119 1290 16" stroke-width="3.8" opacity=".96"/>
+              <path d="M216 738C408 687 552 606 711 483C890 345 1058 206 1290 113" stroke-width="1.5" opacity=".72"/>
+              <path d="M243 744C448 699 606 628 770 521C947 406 1092 290 1290 221" stroke-width="3.1" opacity=".84"/>
+              <path d="M276 750C486 713 644 655 822 564C997 475 1146 381 1290 332" stroke-width="1.3" opacity=".58"/>
+              <path d="M317 755C534 725 702 687 881 615C1052 546 1189 467 1290 430" stroke-width="2.6" opacity=".73"/>
+              <path d="M371 758C587 741 753 716 937 662C1104 613 1226 548 1290 528" stroke-width="1.1" opacity=".46"/>
+              <path d="M433 758C642 754 825 744 995 706C1143 673 1252 617 1290 608" stroke-width="2.2" opacity=".58"/>
+              <path d="M506 758C720 762 884 764 1051 750C1176 735 1263 694 1290 695" stroke-width="1" opacity=".35"/>
+              <path d="M450 631C616 572 707 465 782 337C870 186 990 73 1214 0" stroke-width="1.2" opacity=".35"/>
+              <path d="M578 704C731 635 812 543 902 432C1016 290 1144 179 1290 133" stroke-width="1" opacity=".42"/>
+              <path d="M693 746C836 672 925 596 1004 504C1110 383 1209 308 1290 287" stroke-width="1.4" opacity=".48"/>
+            </g>
+            <g stroke="#0b1e3a" stroke-opacity=".22">
+              <path d="M602 690C728 605 811 493 872 355C934 216 1032 102 1206 22" stroke-width="1"/>
+              <path d="M784 740C909 642 991 543 1061 423C1129 306 1210 225 1290 179" stroke-width="1"/>
+            </g>
+            <g stroke="#1768f2" stroke-opacity=".25" stroke-width="1">
+              <path d="M611 606L686 686"/>
+              <path d="M733 483L822 564"/>
+              <path d="M851 349L947 406"/>
+              <path d="M988 220L1092 290"/>
+              <path d="M1112 112L1214 170"/>
+              <path d="M999 615L1051 750"/>
+              <path d="M1140 548L1176 735"/>
+            </g>
+          </g>
+          <g fill="#1768f2">
+            <rect x="663" y="478" width="10" height="10" opacity=".9"/>
+            <rect x="814" y="552" width="6" height="6" opacity=".56"/>
+            <rect x="933" y="401" width="12" height="12" opacity=".78"/>
+            <rect x="1087" y="279" width="7" height="7" opacity=".66"/>
+            <rect x="1201" y="463" width="10" height="10" opacity=".46"/>
+            <rect x="1250" y="104" width="5" height="5" opacity=".68"/>
+          </g>
+          <g fill="#10151c" opacity=".16">
+            <rect x="588" y="690" width="5" height="5"/>
+            <rect x="754" y="620" width="4" height="4"/>
+            <rect x="1042" y="515" width="5" height="5"/>
+          </g>
+        </svg>
+      </div>
+      <div class="cover15-speaker"><strong>PandaAI 李不白</strong></div>
+    </main>
+  </section>
+
+  <section class="p02" data-label="E2-02 从一次任务进入完整流程">
+    <header class="id"><img src="./assets/pandaai-trading-black.svg" alt=""><i class="div"></i><span class="topic"><b>AI 交易进程</b> · System</span><span class="tag">AdventureX Workshop</span></header>
+    <main><div class="head"><div class="ey">Practice · Continuous System</div><h1><span class="pre">我们在实践里看到，</span>AI 正在从一次任务进入<span class="blue">更完整的交易流程</span></h1></div><div class="system cut"><div class="k">One Continuous Research Cycle</div><div class="roles"><span>数据</span><span>研究</span><span>风控</span><span>执行</span><span>复盘</span><span>下一轮研究</span></div><div class="loop"></div><div class="sysnote">交易不是一次回答，<strong>而是一套持续运行、不断反馈的系统。</strong></div></div></main>
+    <footer class="meta"><span class="ctx">From Task to System</span><span class="num">02 <small>/ 17 · E2—02</small></span></footer>
+  </section>
+
+  <section class="p03" data-label="E2-03 两个问题">
+    <header class="id"><img src="./assets/pandaai-trading-black.svg" alt=""><i class="div"></i><span class="topic"><b>AI 交易进程</b> · Questions</span><span class="tag">AdventureX Workshop</span></header>
+    <main><div class="head"><div class="ey">Today · Two Questions</div><h1>所以今天，我想和大家讨论<span class="blue">两个问题</span></h1></div><div class="questions"><article class="q"><span class="qnum">01</span><p>当 AI 进入交易，<br>它在整套系统里究竟走到了<em>哪一步？</em></p></article><article class="q"><span class="qnum">02</span><p>当这些能力逐渐普及，<br>未来的超额收益（Alpha）<br>还会来自哪里？</p></article></div></main>
+    <footer class="meta"><span class="ctx">Position / Alpha</span><span class="num">03 <small>/ 17 · E2—03</small></span></footer>
+  </section>
+
+  <section class="p04" data-label="E2-04 L0—L4 总览">
+    <header class="id"><img src="./assets/pandaai-trading-black.svg" alt=""><i class="div"></i><span class="topic"><b>AI 交易进程</b> · L0—L4</span><span class="tag">AdventureX Workshop</span></header>
+    <main><div class="head"><div class="ey">Overview · Position Shift</div><h1>我们用 L0—L4，整理 AI 在交易系统里的<span class="blue">位置变化</span></h1></div><div class="levels"><article class="lv"><b>L0</b><strong>纯人工投研</strong><p>人完成全部研究与交易</p><small>Human-led</small></article><article class="lv"><b>L1</b><strong>AI 完成一次任务</strong><p>写代码、做分析、跑回测</p><small>Task</small></article><article class="lv"><b>L2</b><strong>AI 参与一条流程</strong><p>Skills 与 Agent 编排</p><small>Workflow</small></article><article class="lv"><b>L3</b><strong>AI 参与连续研究</strong><p>多 Agent 共享 Context、协同迭代</p><small>Context</small></article><article class="lv"><b>L4</b><strong>AI 承担更多<br>受约束的决策</strong><p>研究、配置、执行与动态风控</p><small>Decision</small></article><div class="axes"><span>AI 能做什么</span><span>能进入哪里</span><span>哪些权责仍由人掌握</span></div></div></main>
+    <footer class="meta"><span class="ctx">Capability / Position / Authority</span><span class="num">04 <small>/ 17 · E2—04</small></span></footer>
+  </section>
+
+  <section class="p05" data-label="E2-05 L0 到 L1">
+    <header class="id"><img src="./assets/pandaai-trading-black.svg" alt=""><i class="div"></i><span class="topic"><b>AI 交易进程</b> · L0 → L1</span><span class="tag">AdventureX Workshop</span></header>
+    <main><div class="head"><div class="ey">L0 → L1 · Action</div><h1>最初的变化很直接：<span class="blue">AI 开始把事情做出来</span></h1></div><div class="compare"><article class="side"><b>L0</b><small>Pure Human Research</small><p>数据、因子、回测、仓位与下单，<br>均由人完成</p></article><article class="side"><b>L1</b><small>AI Completes One Task</small><div class="action"><span class="src">人提出需求</span><i class="arrow"></i><span>代码／分析结果<br>回测／交易指令</span></div></article><div class="conclusion">AI 能完成动作，但目标、规则和下一步仍由人给出。</div></div></main>
+    <footer class="meta"><span class="ctx">Human Goal / AI Action</span><span class="num">05 <small>/ 17 · E2—05</small></span></footer>
+  </section>
+
+  <section class="p06" data-label="E2-06 L2 标准化流程">
+    <header class="id"><img src="./assets/pandaai-trading-black.svg" alt=""><i class="div"></i><span class="topic"><b>AI 交易进程</b> · L2</span><span class="tag">AdventureX Workshop</span></header>
+    <main><div class="head"><div class="ey">L2 · Standardized Workflow</div><h1>当一次次任务被接成流程，AI 才开始<span class="blue">走向 L2</span></h1></div><div class="workflow"><div class="k">Research Workflow</div><div class="steps"><span>数据处理</span><span>因子挖掘</span><span>建模与回测</span><span>组合优化</span><span>风险控制</span><span>执行</span></div><div class="skill"><strong>Skills</strong><span>复用｜组合｜调用</span></div></div><div class="resp"><div><strong>AI</strong><span>承担可以被 SOP 化的工作</span></div><div><strong>人</strong><span>掌握研究目标、交易规则、权限与确认</span></div></div></main>
+    <footer class="meta"><span class="ctx">Workflow / Skills / Boundary</span><span class="num">06 <small>/ 17 · E2—06</small></span></footer>
+  </section>
+
+  <section class="p07" data-label="E2-07 因子挖掘 Agent 仍在 L2">
+    <header class="id"><img src="./assets/pandaai-trading-black.svg" alt=""><i class="div"></i><span class="topic"><b>AI 交易进程</b> · L2 Case</span><span class="tag">AdventureX Workshop</span></header>
+    <main><div class="head"><div class="ey">L2 · Case Question</div><h1>一个因子挖掘 Agent 已经做了很多工作，<br><span class="blue">为什么我们仍把它放在 L2？</span></h1></div><div class="case"><article class="casecol"><b>AI</b><small>Completes the Work</small><ul><li>生成公式或因子</li><li>根据检验结果继续优化</li></ul></article><article class="casecol"><b>人</b><small>Decides the Research Route</small><ul><li>设计检验方式</li><li>留存实验轨迹</li><li>决定研究路线是否调整</li></ul></article></div><div class="casefoot">在这类分工里，Agent 替代的仍然主要是<strong>执行力</strong>。</div></main>
+    <footer class="meta"><span class="ctx">Execution / Research Route</span><span class="num">07 <small>/ 17 · E2—07</small></span></footer>
+  </section>
+
+  <section class="p08" data-label="E2-08 L3 让研究连续发生">
+    <header class="id"><img src="./assets/pandaai-trading-black.svg" alt=""><i class="div"></i><span class="topic"><b>AI 交易进程</b> · L3</span><span class="tag">AdventureX Workshop</span></header>
+    <main><div class="head"><div class="ey">L3 · Continuous Research</div><h1>因为 L3 要解决的，不只是把任务做完，<br>而是让<span class="blue">研究连续发生</span></h1></div><div class="research"><div class="rfield"><div class="rtitle">共享 Context 与 Memory</div><div class="agents"><span>数据 Agent</span><span>投研 Agent</span><span>风控 Agent</span><span>执行 Agent</span><span>复盘 Agent</span></div><div class="rnote">保留过去的实验、选择和反馈<small>让结果进入下一轮研究</small></div></div><aside class="human"><span class="k">Human · Control</span><b>人</b><p>系统设计<br>约束制定<br>最终确权</p></aside></div></main>
+    <footer class="meta"><span class="ctx">Shared Context / Next Research Cycle</span><span class="num">08 <small>/ 17 · E2—08</small></span></footer>
+  </section>
+
+  <section class="p09" data-label="E2-09 连续 Context">
+    <header class="id"><img src="./assets/pandaai-trading-black.svg" alt=""><i class="div"></i><span class="topic"><b>AI 交易进程</b> · Context</span><span class="tag">AdventureX Workshop</span></header>
+    <main><div class="head"><div class="ey">Context · Research Judgement</div><h1>一张回测，回答不了<span class="blue">“这个模型要不要继续运行”</span></h1></div><div class="decision"><div class="ask"><small>Decision in Context</small><b>继续运行<br>这个模型？</b><span>AI 要参与这类判断，系统必须保留、调用并更新一段连续的 Context。</span></div><div class="evidence"><article class="ev" data-n="01"><b>研究结果</b><p>回测结果｜策略回撤｜IC（信息系数）变化</p></article><article class="ev" data-n="02"><b>市场位置</b><p>具体资产与市场状态</p></article><article class="ev" data-n="03"><b>连续经验</b><p>既有模型与长期经验</p></article></div></div></main>
+    <footer class="meta"><span class="ctx">Keep / Call / Update Context</span><span class="num">09 <small>/ 17 · E2—09</small></span></footer>
+  </section>
+
+  <section class="p10" data-label="E2-10 L4 权限边界">
+    <header class="id"><img src="./assets/pandaai-trading-black.svg" alt=""><i class="div"></i><span class="topic"><b>AI 交易进程</b> · L4</span><span class="tag">AdventureX Workshop</span></header>
+    <main><div class="head"><div class="ey">L4 · Authority Boundary</div><h1>再往前，决定阶段的将是：<span class="blue">哪些权限可以交给 Agent</span></h1></div><div class="permission"><article class="perm"><small>Agent · May Take More</small><b>Agent 可能进一步承担</b><p>标准化研究｜资产配置<br>交易执行｜动态风控</p><div class="guard">启停｜控制权｜Context 隔离｜过程追溯｜风控｜人机确权</div></article><article class="perm"><small>Human · Retains</small><b>人更多保留</b><p>顶层投资约束<br>独家信息<br>独创交易思路</p></article></div><div class="p10foot">L4 不是今天可以轻易承诺的状态。</div></main>
+    <footer class="meta"><span class="ctx">Capability × Authority</span><span class="num">10 <small>/ 17 · E2—10</small></span></footer>
+  </section>
+
+  <section class="p11" data-label="E2-11 Alpha 问题">
+    <header class="id"><img src="./assets/pandaai-trading-white.svg" alt=""><i class="div"></i><span class="topic"><b>AI 交易进程</b> · Alpha</span><span class="tag">AdventureX Workshop</span></header>
+    <main class="questionhero"><div class="ey">Alpha · The Next Question</div><h1>如果越来越多的人都能用 AI<br>写代码、挖因子、跑回测，<br><em>Alpha 还会存在吗？</em></h1><div class="pause"></div></main>
+    <footer class="meta"><span class="ctx">Question / Pause</span><span class="num">11 <small>/ 17 · E2—11</small></span></footer>
+  </section>
+
+  <section class="p12" data-label="E2-12 Alpha 从因子迁移到系统">
+    <header class="id"><img src="./assets/pandaai-trading-black.svg" alt=""><i class="div"></i><span class="topic"><b>AI 交易进程</b> · Alpha Shift</span><span class="tag">AdventureX Workshop</span></header>
+    <main><div class="head"><div class="ey">Our Judgement · Alpha Shift</div><h1>Alpha 不会消失，但会从“一个因子”<span class="blue">迁移到“一套系统”</span></h1></div><div class="shift"><div class="shiftmain"><span class="from">一个因子</span><i></i><span class="to">一套系统</span></div><div class="chain"><div class="chainrow"><span>找数据</span><span>清洗</span><span>写代码</span><span>回测</span><span>部署</span></div><div class="chainnote">AI 正在压缩这条研究链路，也在加快规律被发现、复制和定价的速度。<br>依赖公开信息、单一标的和静态逻辑的低维 Alpha，会更快进入拥挤。</div></div></div></main>
+    <footer class="meta"><span class="ctx">Factor → System</span><span class="num">12 <small>/ 17 · E2—12</small></span></footer>
+  </section>
+
+  <section class="p13" data-label="E2-13 三个差异方向">
+    <header class="id"><img src="./assets/pandaai-trading-black.svg" alt=""><i class="div"></i><span class="topic"><b>AI 交易进程</b> · Differentiation</span><span class="tag">AdventureX Workshop</span></header>
+    <main><div class="head"><div class="ey">When Capabilities Flatten</div><h1>当基础能力被拉平，差异可能更多来自<span class="blue">三件事</span></h1></div><div class="three"><article class="threerow"><b>01</b><h2>独家信息</h2><p>人和真实世界的连接</p><span>产业链调研｜线下渠道｜经营反馈｜独家另类数据</span></article><article class="threerow"><b>02</b><h2>Harness</h2><p>同一套能力，如何组织成不同的系统</p><span>能力组合｜约束设置｜调用顺序｜状态切换</span></article><article class="threerow"><b>03</b><h2>跨资产、跨周期系统</h2><p>从单一信号走向动态组合与风险管理</p><span>配置｜轮动｜对冲｜风险控制</span></article></div></main>
+    <footer class="meta"><span class="ctx">Information / Harness / Cross-Asset</span><span class="num">13 <small>/ 17 · E2—13</small></span></footer>
+  </section>
+
+  <section class="p14" data-label="E2-14 差异继续进入 Agent 能力范围">
+    <header class="id"><img src="./assets/pandaai-trading-black.svg" alt=""><i class="div"></i><span class="topic"><b>AI 交易进程</b> · Compression</span><span class="tag">AdventureX Workshop</span></header>
+    <main><div class="head"><div class="ey">Counterpoint · Still Moving</div><h1>但跨资产与 Harness，也会继续进入<span class="blue">Agent 的能力范围</span></h1></div><div class="compress"><article class="comp"><small>CROSS-ASSET</small><b>跨资产组合优化</b><p>可能被 A2A<br>继续压缩</p><span class="compmark">A2A</span></article><article class="comp"><small>HARNESS</small><b>Harness</b><p>可能被能够根据实时反馈<br>调整 SOP 的 Agent 逐步替代</p><span class="compmark">SOP</span></article></div><div class="compfoot">今天形成差异的方式，仍会随着 Agent 的能力继续变化。</div></main>
+    <footer class="meta"><span class="ctx">Difference Is Still Moving</span><span class="num">14 <small>/ 17 · E2—14</small></span></footer>
+  </section>
+
+  <section class="p15" data-label="E2-15 为什么 PandaAI 先做 L2">
+    <header class="id"><img src="./assets/pandaai-trading-black.svg" alt=""><i class="div"></i><span class="topic"><b>PandaAI</b> · Why L2</span><span class="tag">AdventureX Workshop</span></header>
+    <main><div class="head"><div class="ey">PandaAI · Current Foundation</div><h1>为什么 PandaAI 选择<span class="blue">先做 L2？</span></h1></div><div class="why">从一次生成走向一条可运行的投研流程，需要一套可以调用、组合、约束和追溯的专业能力。</div><div class="foundation"><article class="flayer"><b>数据处理</b><span>行情｜财报｜新闻｜研报｜K 线｜订单流</span></article><article class="flayer"><b>业务逻辑</b><span>因子｜组合｜建模｜回测｜风控</span></article><article class="flayer"><b>执行边界</b><span>交易规则｜流动性｜风控约束</span></article></div></main>
+    <footer class="meta"><span class="ctx">Professional Capability Foundation</span><span class="num">15 <small>/ 17 · E2—15</small></span></footer>
+  </section>
+
+  <section class="p16" data-label="E2-16 L2 为 L3 做准备">
+    <header class="id"><img src="./assets/pandaai-trading-black.svg" alt=""><i class="div"></i><span class="topic"><b>PandaAI</b> · L2 → L3</span><span class="tag">AdventureX Workshop</span></header>
+    <main><div class="head"><div class="ey">From Foundation to Collaboration</div><h1>当这些能力在同一个 Context 中协同，<span class="blue">L3 才开始成为可能</span></h1></div><div class="bridge"><article class="stage"><b>L2</b><h2>Skills 与 Agent 编排</h2><p>能力可以调用<br>流程可以约束<br>结果可以追溯</p></article><article class="stage"><b>L3</b><h2>A2A 多 Agent 协同</h2><p>共享 Context<br>协同研究<br>反馈进入下一轮</p></article><div class="contextbridge">Context</div></div><div class="bridgefoot">PandaAI 当前先把 L2 做扎实，再继续为 L3 的协同能力做准备。</div></main>
+    <footer class="meta"><span class="ctx">L2 Foundation / L3 Collaboration</span><span class="num">16 <small>/ 17 · E2—16</small></span></footer>
+  </section>
+
+  <section class="p17" data-label="E2-17 结束">
+    <div class="book15-brand"><img src="./assets/pandaai-trading-white.svg" alt="PandaAI Trading"></div>
+    <div class="book15-event"><i aria-hidden="true"></i><span>AdventureX Workshop</span></div>
+    <div class="close15-field" aria-hidden="true">
+      <svg viewBox="0 0 1600 900" role="presentation">
+        <defs>
+          <linearGradient id="o15-close-trace" x1="0" y1="1" x2="1" y2=".2">
+            <stop offset="0" stop-color="#1768f2" stop-opacity="0"/>
+            <stop offset=".48" stop-color="#2475f3" stop-opacity=".18"/>
+            <stop offset=".82" stop-color="#4b91fc" stop-opacity=".9"/>
+            <stop offset="1" stop-color="#9cc7ff" stop-opacity=".32"/>
+          </linearGradient>
+          <linearGradient id="o15-close-soft" x1="0" y1="1" x2="1" y2=".2">
+            <stop offset="0" stop-color="#1768f2" stop-opacity="0"/>
+            <stop offset=".72" stop-color="#1768f2" stop-opacity=".12"/>
+            <stop offset="1" stop-color="#62a4ff" stop-opacity=".04"/>
+          </linearGradient>
+          <linearGradient id="o15-close-exit" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#1768f2" stop-opacity="0"/>
+            <stop offset=".56" stop-color="#1768f2" stop-opacity=".06"/>
+            <stop offset="1" stop-color="#4389fa" stop-opacity=".2"/>
+          </linearGradient>
+          <filter id="o15-close-blur" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="32"/>
+          </filter>
+        </defs>
+        <rect x="1170" y="0" width="430" height="900" fill="url(#o15-close-exit)"/>
+        <ellipse cx="1355" cy="430" rx="235" ry="330" fill="#1768f2" opacity=".1" filter="url(#o15-close-blur)"/>
+        <g class="close15-traces" fill="none" stroke-linecap="round">
+          <g stroke="url(#o15-close-soft)">
+            <path d="M330 870C710 792 1008 645 1191 470C1325 334 1427 227 1570 170" stroke-width="46" opacity=".32"/>
+            <path d="M600 872C878 799 1115 680 1270 546C1392 432 1493 352 1570 324" stroke-width="30" opacity=".24"/>
+            <path d="M875 875C1074 804 1228 707 1357 624C1460 550 1534 505 1570 492" stroke-width="20" opacity=".18"/>
+          </g>
+          <g stroke="url(#o15-close-trace)">
+            <path d="M288 892C660 790 970 641 1167 456C1314 311 1418 206 1594 151" stroke-width="3.2" opacity=".95"/>
+            <path d="M381 892C728 804 1011 671 1207 497C1354 358 1464 267 1594 238" stroke-width="1.2" opacity=".48"/>
+            <path d="M491 893C815 816 1064 700 1251 539C1395 407 1490 331 1594 315" stroke-width="2.6" opacity=".8"/>
+            <path d="M618 893C905 831 1110 734 1296 584C1430 469 1516 406 1594 397" stroke-width="1.1" opacity=".43"/>
+            <path d="M751 892C1003 842 1176 763 1344 631C1465 528 1536 484 1594 480" stroke-width="2.1" opacity=".66"/>
+            <path d="M884 886C1107 846 1254 788 1390 677C1492 587 1550 563 1594 568" stroke-width="1" opacity=".4"/>
+            <path d="M1019 880C1205 844 1323 807 1433 728C1516 661 1565 646 1594 656" stroke-width="1.8" opacity=".53"/>
+            <path d="M1140 860C1297 839 1385 826 1474 780C1540 746 1576 735 1594 746" stroke-width="1" opacity=".3"/>
+            <path d="M884 10C1113 103 1225 201 1324 324C1429 454 1517 521 1594 541" stroke-width="1.3" opacity=".34"/>
+            <path d="M1104 12C1263 104 1341 190 1408 288C1481 395 1540 444 1594 457" stroke-width="1" opacity=".28"/>
+          </g>
+          <g stroke="#82b5ff" stroke-opacity=".23" stroke-width="1">
+            <path d="M1059 709L1146 795"/>
+            <path d="M1196 588L1297 680"/>
+            <path d="M1301 465L1396 571"/>
+            <path d="M1418 349L1490 479"/>
+            <path d="M1515 272L1555 397"/>
+          </g>
+        </g>
+        <g fill="#8dbaff">
+          <rect x="1163" y="450" width="9" height="9" opacity=".78"/>
+          <rect x="1290" y="536" width="6" height="6" opacity=".54"/>
+          <rect x="1370" y="515" width="11" height="11" opacity=".86"/>
+          <rect x="1460" y="401" width="6" height="6" opacity=".58"/>
+          <rect x="1537" y="319" width="9" height="9" opacity=".74"/>
+        </g>
+      </svg>
+    </div>
+    <main class="close15">
+      <h1 class="close15-title"><span class="close15-pre">对交易来说，</span><span class="close15-main">AI 的下一步</span><span class="close15-thesis"><em>不会只是</em>一段更好的代码</span></h1>
+      <div class="close15-copy">当这套系统开始运行，<br>研究如何发生、Alpha 从哪里产生差异，<br>也会随之变化。</div>
+      <div class="close15-signature">这就是 <strong>PandaAI</strong> 正在探索的 AI 交易进程。</div>
+      <div class="close15-cycle"><span>数据</span><span>研究</span><span>风控</span><span>执行</span><span>复盘</span><span>下一轮研究</span></div>
+    </main>
+  </section>
+</deck-stage>
+<script src="./assets/deck-stage.js"></script>
+<script>customElements.whenDefined("deck-stage").then(()=>{const o=document.querySelector("deck-stage")?.shadowRoot?.querySelector(".overlay");if(o)o.style.display="none"})</script>
+</body>
+</html>

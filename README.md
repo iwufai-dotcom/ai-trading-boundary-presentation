@@ -4,6 +4,7 @@
 
 ## 当前内容
 
+- PandaAI｜AI 交易进程：从 L0 到 L4 的探索与思考：`pages/ai-trading-process-l0-l4/`
 - AI 与人在交易中的效率与边界：`pages/ai-trading-boundary/`
 - AI 与人在交易中的效率与边界 - Dark Atlas v2：`pages/ai-trading-boundary-dark-atlas-v2/`
 

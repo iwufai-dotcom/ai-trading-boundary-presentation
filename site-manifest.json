@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-18",
+  "updated_at": "2026-07-24",
   "items": [
     {
       "slug": "ai-trading-boundary",
@@ -31,6 +31,14 @@
       "source_archive": "html/2026-06-18_184435_pandaai-community-live-009-html-v02.html",
       "status": "active",
       "updated_at": "2026-06-18"
+    },
+    {
+      "slug": "ai-trading-process-l0-l4",
+      "title": "PandaAI｜AI 交易进程：从 L0 到 L4 的探索与思考",
+      "path": "pages/ai-trading-process-l0-l4/",
+      "source_archive": "html/2026-07-24_095712_ai-trading-process-l0-l4.html",
+      "status": "active",
+      "updated_at": "2026-07-24"
     }
   ]
 }

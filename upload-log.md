@@ -63,3 +63,11 @@
 - public_path: `pages/pandaai-community-live-009-html-v02/`
 - resources: `assets`
 - risk_check: reviewed before push; public demo page only, no local paths, secrets, or private project archive content found
+## 2026-07-24 09:57:12 - PandaAI｜AI 交易进程：从 L0 到 L4 的探索与思考
+
+- slug: `ai-trading-process-l0-l4`
+- source_name: `public-index.html`
+- archived_html: `html/2026-07-24_095712_ai-trading-process-l0-l4.html`
+- public_path: `pages/ai-trading-process-l0-l4/`
+- resources: `assets, assets/fonts/Alibaba_PuHuiTi_2.0_55_Regular_55_Regular.v0Jvxhj3.ttf, assets/fonts/Alibaba_PuHuiTi_2.0_65_Medium_65_Medium.CQXjKuOQ.ttf, assets/fonts/Alibaba_PuHuiTi_2.0_75_SemiBold_75_SemiBold.RW9Dsu2O.ttf`
+- risk_check: reviewed before push; public presentation only, with sanitized title and paths, bundled current PandaAI Trading logos, deck runtime, and local font assets; no task documents, local paths, secrets, or private project archive content found
